@@ -1,12 +1,12 @@
 <template>
   <Layout>
     <template v-slot:sidebar>
-      <Sidebar @delete="delßeteNode"/>
+      <Sidebar @delete="deleteNode" />
     </template>
     <template v-slot:header>
-      <Header @undo="undo" @redo="redo"/>
+      <Header @undo="undo" @redo="redo" />
     </template>
-    <Canvas :scene="scene" @update="updateScene"/>
+    <Canvas :scene="scene" @update="updateScene" />
   </Layout>
 </template>
 <script>
@@ -24,12 +24,6 @@ import {
   undo,
   redo
 } from './utils/history';
-import ReingoldTilford from './utils/ReingoldTilford';
-
-const GRID_STEP_X = 100;
-const GRID_STEP_Y = 120;
-const GRID_OFFSET_X = 100;
-const GRID_OFFSET_Y = 100;
 
 export default {
   components: {
@@ -56,57 +50,56 @@ export default {
     hasUnsavedChanges() {
       return this.undoable;
     },
-    tree() {
-      return ReingoldTilford(this.scene, 101);
-    },
-    map() {
-      return this.scene.reduce((map, item) => {
-        map[item.id] = item;
-        return map;
-      }, {});
-    },
-    nodeSize() {
-      return 80;
-    },
-    sceneOffsetX() {
-      return GRID_OFFSET_X;
-    },
-    sceneOffsetY() {
-      return GRID_OFFSET_Y;
-    },
-    sceneStepX() {
-      return GRID_STEP_X;
-    },
-    sceneStepY() {
-      return GRID_STEP_Y;
-    },
-    nextId() {
-      return this.scene.reduce((max, item) => {
-        if (max > item.id) {
-          return max;
-        }
-        return item.id + 1;
-      }, 101);
-    },
-    pickerItems() {
-      return [];
-    },
     initialScene() {
-      return [];
+      const id1 = nanoid();
+      const id2 = nanoid();
+      const id3 = nanoid();
+      const id4 = nanoid();
+      const id5 = nanoid();
+      return [
+        {
+          id: id1,
+          type: 'flash',
+          left: id2
+        },
+        {
+          id: id2,
+          parent: id1,
+          type: 'email',
+          left: id3
+        },
+        {
+          id: id3,
+          parent: id2,
+          type: 'fork',
+          left: id4,
+          right: id5
+        },
+        {
+          id: id4,
+          parent: id3,
+          type: 'delay'
+        },
+        {
+          id: id5,
+          parent: id3,
+          type: 'delay'
+        }
+      ];
     }
   },
   created() {
     this.history = initialize(this.initialScene);
   },
   mounted() {
-    try {
-      const scene = JSON.parse(localStorage['scene']);
-      if (Array.isArray(scene)) {
-        this.history = initialize(scene);
-      }
-    } catch {
-      this.history = initialize(this.initialScene);
-    }
+    // try {
+    //   const scene = JSON.parse(localStorage['scene']);
+    //   if (Array.isArray(scene)) {
+    //     this.history = initialize(scene);
+    //   }
+    // } catch {
+    //   this.history = initialize(this.initialScene);
+    // }
     this.keyHandler = (e) => {
       const undoPressed =
         (e.code === 'KeyZ' && e.ctrlKey) ||

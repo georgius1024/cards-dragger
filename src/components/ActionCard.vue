@@ -53,10 +53,11 @@ export default {
     cardStyle() {
       if (this.absolute) {
         return {
+          position: 'absolute',
           left: `${this.x}px`,
           top: `${this.y}px`,
-          width: `${this.size}px`,
-          height: `${this.size}px`
+          width: `${this.width}px`,
+          height: `${this.height}px`
         };
       }
     }
