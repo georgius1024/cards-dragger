@@ -1,5 +1,10 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import './assets/style.scss'
+import { createApp } from 'vue';
+import { createStore } from 'vuex';
+import App from './App.vue';
+import store from './store';
+import './assets/style.scss';
 
-createApp(App).mount('#app')
+const appStore = createStore(store);
+const app = createApp(App);
+app.use(appStore);
+app.mount('#app');
