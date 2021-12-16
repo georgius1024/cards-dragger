@@ -16,6 +16,7 @@
       :rejected="rejected"
       @update="updateScene"
       @dropNode="dropNode"
+      @drop="dropOff"
     />
   </Layout>
 </template>
@@ -84,64 +85,6 @@ export default {
     },
     initialScene() {
       return initialState;
-      // const id1 = nanoid();
-      // const id2 = nanoid();
-      // const id3 = nanoid();
-      // const id4 = nanoid();
-      // const id5 = nanoid();
-      // return [
-      //   {
-      //     id: 'flash',
-      //     type: 'flash',
-      //     left: 'delay'
-      //   },
-      //   {
-      //     id: 'delay',
-      //     type: 'delay',
-      //     parent: 'flash',
-      //     left: 'email'
-      //   },
-      //   {
-      //     id: 'email',
-      //     type: 'email',
-      //     parent: 'delay',
-      //     left: 'account'
-      //   },
-      //   {
-      //     id: 'account',
-      //     parent: 'email',
-      //     type: 'account'
-      //   }
-
-      //   // {
-      //   //   id: id1,
-      //   //   type: 'flash',
-      //   //   left: id2
-      //   // },
-      //   // {
-      //   //   id: id2,
-      //   //   parent: id1,
-      //   //   type: 'email',
-      //   //   left: id3
-      //   // },
-      //   // {
-      //   //   id: id3,
-      //   //   parent: id2,
-      //   //   type: 'fork',
-      //   //   left: id4,
-      //   //   right: id5
-      //   // },
-      //   // {
-      //   //   id: id4,
-      //   //   parent: id3,
-      //   //   type: 'delay'
-      //   // },
-      //   // {
-      //   //   id: id5,
-      //   //   parent: id3,
-      //   //   type: 'delay'
-      //   // }
-      // ];
     }
   },
   created() {
@@ -231,6 +174,10 @@ export default {
       // if (sceneItem) {
       //   return this.moveNode(parent, sceneItem);
       // }
+    },
+    dropOff(event) {
+      const from = event.dataTransfer.getData('id');
+      this.reject(from);
     },
     attachNewNode(from, to) {
       const target = this.map[to];
