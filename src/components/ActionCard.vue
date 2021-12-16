@@ -54,6 +54,9 @@ import flash from '../assets/icons/flash.svg';
 import delay from '../assets/icons/delay.svg';
 import email from '../assets/icons/email.svg';
 import fork from '../assets/icons/fork.svg';
+import account from '../assets/icons/account.svg';
+import run from '../assets/icons/run.svg';
+import headset from '../assets/icons/headset.svg';
 import LineConnector from './LineConnector.vue';
 import SideConnector from './SideConnector.vue';
 
@@ -69,7 +72,15 @@ export default {
     type: {
       type: String,
       validator(value) {
-        return ['flash', 'delay', 'email', 'fork'].includes(value);
+        return [
+          'flash',
+          'delay',
+          'email',
+          'fork',
+          'account',
+          'run',
+          'headset'
+        ].includes(value);
       }
     },
     x: {
@@ -104,14 +115,17 @@ export default {
       dragOver: false
     };
   },
-  emits: ['dropOn'],
+  emits: ['dropOn', 'dragStart'],
   computed: {
     icons() {
       return {
         flash,
         delay,
         email,
-        fork
+        fork,
+        run,
+        headset,
+        account
       };
     },
     cardStyle() {

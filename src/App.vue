@@ -21,6 +21,7 @@
 </template>
 <script>
 import { nanoid } from 'nanoid';
+import initialState from './initialState.json';
 import Layout from './components/Layout.vue';
 import Sidebar from './components/Sidebar.vue';
 import Header from './components/Header.vue';
@@ -68,47 +69,79 @@ export default {
       return this.undoable;
     },
     samples() {
-      return ['delay', 'email', 'fork'].map((type) => ({
+      return [
+        'delay',
+        'email',
+        'fork',
+        'flash',
+        'run',
+        'account',
+        'headset'
+      ].map((type) => ({
         type,
         id: nanoid()
       }));
     },
     initialScene() {
-      const id1 = nanoid();
-      const id2 = nanoid();
-      const id3 = nanoid();
-      const id4 = nanoid();
-      const id5 = nanoid();
-      return [
-        {
-          id: id1,
-          type: 'flash',
-          left: id2
-        },
-        {
-          id: id2,
-          parent: id1,
-          type: 'email',
-          left: id3
-        },
-        {
-          id: id3,
-          parent: id2,
-          type: 'fork',
-          left: id4,
-          right: id5
-        },
-        {
-          id: id4,
-          parent: id3,
-          type: 'delay'
-        },
-        {
-          id: id5,
-          parent: id3,
-          type: 'delay'
-        }
-      ];
+      return initialState;
+      // const id1 = nanoid();
+      // const id2 = nanoid();
+      // const id3 = nanoid();
+      // const id4 = nanoid();
+      // const id5 = nanoid();
+      // return [
+      //   {
+      //     id: 'flash',
+      //     type: 'flash',
+      //     left: 'delay'
+      //   },
+      //   {
+      //     id: 'delay',
+      //     type: 'delay',
+      //     parent: 'flash',
+      //     left: 'email'
+      //   },
+      //   {
+      //     id: 'email',
+      //     type: 'email',
+      //     parent: 'delay',
+      //     left: 'account'
+      //   },
+      //   {
+      //     id: 'account',
+      //     parent: 'email',
+      //     type: 'account'
+      //   }
+
+      //   // {
+      //   //   id: id1,
+      //   //   type: 'flash',
+      //   //   left: id2
+      //   // },
+      //   // {
+      //   //   id: id2,
+      //   //   parent: id1,
+      //   //   type: 'email',
+      //   //   left: id3
+      //   // },
+      //   // {
+      //   //   id: id3,
+      //   //   parent: id2,
+      //   //   type: 'fork',
+      //   //   left: id4,
+      //   //   right: id5
+      //   // },
+      //   // {
+      //   //   id: id4,
+      //   //   parent: id3,
+      //   //   type: 'delay'
+      //   // },
+      //   // {
+      //   //   id: id5,
+      //   //   parent: id3,
+      //   //   type: 'delay'
+      //   // }
+      // ];
     }
   },
   created() {
@@ -171,7 +204,10 @@ export default {
       if (sampleItem) {
         return this.attachNewNode(from, to);
       }
-      console.log({ from, to });
+      const sceneItem = this.scene.find((e) => e.id === from);
+      if (sceneItem) {
+        return this.moveNode(from, to);
+      }
 
       // const { offsetLeft, offsetTop, scrollLeft, scrollTop } =
       //   this.$refs.canvas;
@@ -278,45 +314,85 @@ export default {
       const currentParent = this.map[node.parent];
       return currentParent && this.hasAsParent(currentParent, parent);
     },
-    moveNode(parent, node) {
-      if (parent.left && parent.right) {
-        // Error - parent full
-        this.reject(parent.id);
+    moveNode(from, to) {
+      const source = { ...this.map[from] };
+      if (!source) {
+        this.reject(to);
         return;
       }
-      if (parent.id === node.id) {
-        // Error - can not be child for himself
-        this.reject(parent.id);
+      if (!source.parent) {
+        this.reject(from);
         return;
       }
-      if (parent.id === node.parent) {
-        // Error - closest parent can not be target
-        this.reject(parent.id);
+
+      const target = { ...this.map[to] };
+      if (!target) {
+        this.reject(from);
         return;
       }
-      if (this.hasAsParent(parent, node)) {
-        // Error - can not be parent for himself
-        this.reject(parent.id);
+      if (target.type === 'fork' || source.type === 'fork') {
+        this.reject(to);
+        this.reject(from);
         return;
       }
-      const scene = this.scene.map((e) => {
-        if (e.id === node.id) {
-          return { ...e, parent: parent.id };
-        } else if (e.id === parent.id) {
-          if (e.left) {
-            return { ...e, right: node.id };
-          } else {
-            return { ...e, left: node.id };
+      const parent = this.map[target.parent];
+      if (!parent || parent.type === 'fork') {
+        this.reject(to);
+        return;
+      }
+      if (to === from) {
+        this.reject(to);
+        return;
+      }
+      if (source.parent === target.id) {
+        return this.moveNode(to, from);
+      }
+      const changedNodes = {};
+      changedNodes[source.id] = { ...source };
+      changedNodes[target.id] = { ...target };
+      changedNodes[source.parent] = { ...this.map[source.parent] };
+
+      if (source.left) {
+        changedNodes[source.left] = { ...this.map[source.left] };
+      }
+      if (target.left) {
+        changedNodes[target.left] = { ...this.map[target.left] };
+      }
+
+      const sourceParent = changedNodes[source.parent];
+      const sourceChild = changedNodes[source.left];
+      const targetChild = changedNodes[target.left];
+      const sourceNode = changedNodes[source.id];
+      const targetNode = changedNodes[target.id];
+      sourceParent.left =
+        sourceParent.left === source.id ? sourceChild?.id : sourceParent.left;
+      sourceParent.right =
+        sourceParent.right === source.id ? sourceChild?.id : sourceParent.right;
+
+      if (sourceChild) {
+        sourceChild.parent = sourceParent.id;
+      }
+
+      if (targetChild) {
+        targetChild.parent = source.id;
+      }
+
+      targetNode.left = sourceNode.id;
+      sourceNode.parent = targetNode.id;
+      sourceNode.left = targetChild && targetChild.id;
+      console.log(changedNodes);
+
+      const scene = [
+        ...this.scene.map((e) => {
+          if (changedNodes[e.id]) {
+            return changedNodes[e.id];
           }
-        } else if (e.id === node.parent) {
-          if (e.left === node.id) {
-            return { ...e, left: undefined };
-          } else {
-            return { ...e, right: undefined };
-          }
-        }
-        return e;
-      });
+          return e;
+        })
+      ];
+
+      console.log(source, target);
+      console.dir(JSON.parse(JSON.stringify(scene)));
       this.updateScene(scene);
     },
     deleteNode(event) {
