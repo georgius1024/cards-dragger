@@ -1,12 +1,12 @@
 <template>
   <div class="sidebar">
-    <ActionCard
-      v-for="card in samples"
-      :key="card.type"
-      :rejected="Boolean(rejected[card.id])"
-      :id="card.id"
-      :type="card.type"
-    />
+    <div v-for="card in samples" class="container" :key="card.type">
+      <ActionCard
+        :rejected="Boolean(rejected[card.id])"
+        :id="card.id"
+        :type="card.type"
+      />
+    </div>
     <div class="separator"></div>
     <div
       class="trash"
@@ -25,7 +25,6 @@
   </div>
 </template>
 <script>
-import { nanoid } from 'nanoid';
 import ActionCard from './ActionCard.vue';
 export default {
   components: {
@@ -33,7 +32,7 @@ export default {
   },
   props: {
     samples: {
-      type: Object,
+      type: Array,
       required: true
     },
     rejected: {

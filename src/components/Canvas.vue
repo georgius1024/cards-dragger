@@ -20,11 +20,11 @@
 <script>
 import ReingoldTilford from '../utils/ReingoldTilford';
 import ActionCard from './ActionCard.vue';
-const GRID_STEP_X = 140;
+const GRID_STEP_X = 200;
 const GRID_STEP_Y = 120;
-const GRID_OFFSET_X = 100;
+const GRID_OFFSET_X = 120;
 const GRID_OFFSET_Y = 100;
-const NODE_WIDTH = 100;
+const NODE_WIDTH = 180;
 const NODE_HEIGHT = 60;
 export default {
   components: {
@@ -96,5 +96,6 @@ export default {
   background-color: #eee;
   flex-grow: 1;
   position: relative;
+  overflow: auto;
 }
 </style>

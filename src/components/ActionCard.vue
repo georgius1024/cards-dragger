@@ -18,14 +18,50 @@
       {{ type.toUpperCase() }}
     </div>
   </div>
+  <template v-if="isFork">
+    <SideConnector
+      v-if="leftConnection"
+      :fromX="leftConnectionPoint.x"
+      :fromY="leftConnectionPoint.y"
+      :toX="leftConnection.x"
+      :toY="leftConnection.y"
+      stroke="4"
+      radius="24"
+    />
+    <SideConnector
+      v-if="rightConnection"
+      :fromX="rightConnectionPoint.x"
+      :fromY="rightConnectionPoint.y"
+      :toX="rightConnection.x"
+      :toY="rightConnection.y"
+      stroke="4"
+      radius="24"
+    />
+  </template>
+  <template v-else>
+    <LineConnector
+      v-if="singleChild"
+      :fromX="centralConnectionPoint.x"
+      :fromY="centralConnectionPoint.y"
+      :toX="singleChildConnection.x"
+      :toY="singleChildConnection.y"
+      stroke="4"
+    />
+  </template>
 </template>
 <script>
 import flash from '../assets/icons/flash.svg';
 import delay from '../assets/icons/delay.svg';
 import email from '../assets/icons/email.svg';
 import fork from '../assets/icons/fork.svg';
+import LineConnector from './LineConnector.vue';
+import SideConnector from './SideConnector.vue';
 
 export default {
+  components: {
+    LineConnector,
+    SideConnector
+  },
   props: {
     id: {
       type: [String, Number]
@@ -48,6 +84,12 @@ export default {
     height: {
       type: [String, Number]
     },
+    leftConnection: {
+      type: Object
+    },
+    rightConnection: {
+      type: Object
+    },
     absolute: {
       type: Boolean,
       default: false
@@ -62,6 +104,7 @@ export default {
       dragOver: false
     };
   },
+  emits: ['dropOn'],
   computed: {
     icons() {
       return {
@@ -80,6 +123,44 @@ export default {
           width: `${this.width}px`,
           height: `${this.height}px`
         };
+      }
+    },
+    isFork() {
+      return this.type === 'fork';
+    },
+    children() {
+      return [this.leftConnection, this.rightConnection].filter(Boolean);
+    },
+    bothChildren() {
+      return this.children.length === 2;
+    },
+    singleChild() {
+      return this.children.length === 1;
+    },
+    centralConnectionPoint() {
+      return {
+        x: this.x + this.width / 2,
+        y: this.y + this.height
+      };
+    },
+    leftConnectionPoint() {
+      return {
+        x: this.x,
+        y: this.y + this.height / 2
+      };
+    },
+    rightConnectionPoint() {
+      return {
+        x: this.x + this.width,
+        y: this.y + this.height / 2
+      };
+    },
+    singleChildConnection() {
+      if (this.leftConnection) {
+        return this.leftConnection;
+      }
+      if (this.rightConnection) {
+        return this.rightConnection;
       }
     }
   },
@@ -120,6 +201,10 @@ export default {
   align-items: center;
   transition: all 200ms ease;
   transform-origin: center;
+  &:hover {
+    transform: translate(0, -2px);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.32);
+  }
   & * {
     pointer-events: none;
   }

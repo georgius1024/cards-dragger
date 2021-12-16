@@ -161,28 +161,18 @@ export default {
     clear() {
       this.history = initialize(this.initialScene);
     },
-    // gridToCanvasX(col) {
-    //   return col * this.sceneStepX + this.sceneOffsetX - this.nodeSize / 2;
-    // },
-    // gridToCanvasY(row) {
-    //   return row * this.sceneStepY + this.sceneOffsetY - this.nodeSize / 2;
-    // },
-    // connectionPoint(id) {
-    //   const node = this.tree[id];
-    //   if (node) {
-    //     return {
-    //       x: node.x * this.sceneStepX + this.sceneOffsetX,
-    //       y: node.y * this.sceneStepY + this.sceneOffsetY - this.nodeSize / 2
-    //     };
-    //   }
-    // },
-    // snapToGrid(x, y) {
-    //   const col = +Math.round((x - GRID_OFFSET_X) / GRID_STEP_X);
-    //   const row = +Math.round((y - GRID_OFFSET_Y) / GRID_STEP_Y);
-    //   return { col, row };
-    // },
     dropNode({ from, to }) {
+      if (!to || !from) {
+        this.reject(from);
+        this.reject(to);
+        return;
+      }
+      const sampleItem = this.samples.find((e) => e.id === from);
+      if (sampleItem) {
+        return this.attachNewNode(from, to);
+      }
       console.log({ from, to });
+
       // const { offsetLeft, offsetTop, scrollLeft, scrollTop } =
       //   this.$refs.canvas;
       // const id = event.dataTransfer.getData('id');
@@ -206,28 +196,80 @@ export default {
       //   return this.moveNode(parent, sceneItem);
       // }
     },
-    placeNewNode(parent, pickerItem) {
-      const parentId = parent.id;
-      if (parent.left && parent.right) {
-        // Error - parent is full
-        this.reject(parent.id);
-        return false;
+    attachNewNode(from, to) {
+      const target = this.map[to];
+      if (!target) {
+        this.reject(from);
+        return;
       }
-      const node = {
-        ...pickerItem,
-        id: this.nextId,
-        parent: parentId
-      };
-      if (parent.left) {
-        parent.right = node.id;
+      const sampleItem = this.samples.find((e) => e.id === from);
+      if (!sampleItem) {
+        this.reject(to);
+        return;
+      }
+      if (target.type === 'fork') {
+        if (!target.left) {
+          const nodeToMakeParent = to;
+          const nodeToInsert = {
+            ...sampleItem,
+            parent: to,
+            id: nanoid()
+          };
+          const scene = [
+            ...this.scene.map((e) => {
+              if (e.id === nodeToMakeParent) {
+                return { ...e, left: nodeToInsert.id };
+              }
+              return e;
+            }),
+            nodeToInsert
+          ];
+          this.updateScene(scene);
+        } else if (!target.right) {
+          const nodeToMakeParent = to;
+          const nodeToInsert = {
+            ...sampleItem,
+            parent: to,
+            id: nanoid()
+          };
+          const scene = [
+            ...this.scene.map((e) => {
+              if (e.id === nodeToMakeParent) {
+                return { ...e, right: nodeToInsert.id };
+              }
+              return e;
+            }),
+            nodeToInsert
+          ];
+          this.updateScene(scene);
+        } else {
+          this.reject(from);
+          this.reject(to);
+          return;
+        }
       } else {
-        parent.left = node.id;
+        // Make child for target
+        const nodeToMakeChild = target.left || target.right;
+        const nodeToMakeParent = to;
+        const nodeToInsert = {
+          ...sampleItem,
+          parent: to,
+          left: nodeToMakeChild ? nodeToMakeChild : null,
+          id: nanoid()
+        };
+        const scene = [
+          ...this.scene.map((e) => {
+            if (e.id === nodeToMakeParent) {
+              return { ...e, left: nodeToInsert.id };
+            } else if (e.id === nodeToMakeChild) {
+              return { ...e, parent: nodeToInsert.id };
+            }
+            return e;
+          }),
+          nodeToInsert
+        ];
+        this.updateScene(scene);
       }
-      const scene = [
-        ...this.scene.map((e) => (e.id === parentId ? parent : e)),
-        node
-      ];
-      this.updateScene(scene);
     },
     hasAsParent(node, parent) {
       if (node.parent === parent.id) {
