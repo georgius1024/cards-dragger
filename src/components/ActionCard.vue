@@ -9,7 +9,7 @@
     @dragover.prevent
     @dragenter.prevent="dragenter"
     @dragleave.prevent="dragleave"
-    @drop="drop"
+    @drop.stop="drop"
   >
     <div class="icon">
       <img :src="icons[type]" />
