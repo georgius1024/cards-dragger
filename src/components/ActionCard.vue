@@ -1,5 +1,16 @@
 <template>
-  <div class="card" :style="cardStyle" draggable="true" @dragstart="startDrag">
+  <div
+    class="card"
+    :class="{ 'drag-over': dragOver, rejected }"
+    :style="cardStyle"
+    draggable="true"
+    @dragstart="startDrag"
+    @dragend="dragEnd"
+    @dragover.prevent
+    @dragenter.prevent="dragenter"
+    @dragleave.prevent="dragleave"
+    @drop="drop"
+  >
     <div class="icon">
       <img :src="icons[type]" />
     </div>
@@ -38,8 +49,18 @@ export default {
       type: [String, Number]
     },
     absolute: {
-      type: [Boolean]
+      type: Boolean,
+      default: false
+    },
+    rejected: {
+      type: Boolean,
+      default: false
     }
+  },
+  data() {
+    return {
+      dragOver: false
+    };
   },
   computed: {
     icons() {
@@ -67,6 +88,22 @@ export default {
       event.dataTransfer.setData('id', this.id);
       event.dataTransfer.dropEffect = 'move';
       event.dataTransfer.effectAllowed = 'move';
+      this.$emit('dragStart', { from: this.id });
+    },
+    dragend() {
+      this.dragOver = false;
+    },
+    dragenter() {
+      this.dragOver = true;
+    },
+    dragleave() {
+      this.dragOver = false;
+    },
+    drop(event) {
+      this.dragOver = false;
+      const from = event.dataTransfer.getData('id');
+      const to = this.id;
+      this.$emit('dropOn', { from, to });
     }
   }
 };
@@ -81,8 +118,17 @@ export default {
   user-select: none;
   cursor: pointer;
   align-items: center;
+  transition: all 200ms ease;
+  transform-origin: center;
+  & * {
+    pointer-events: none;
+  }
   .icon {
     margin: 4px;
+  }
+  &.drag-over {
+    transform: scale(1.5);
+    opacity: 0.5;
   }
 }
 </style>

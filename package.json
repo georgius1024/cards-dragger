@@ -9,8 +9,7 @@
   "dependencies": {
     "nanoid": "^3.1.30",
     "sass": "^1.45.0",
-    "vue": "^3.2.25",
-    "vuex": "4"
+    "vue": "^3.2.25"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.0",

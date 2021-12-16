@@ -1,12 +1,22 @@
 <template>
   <Layout>
     <template v-slot:sidebar>
-      <Sidebar @delete="deleteNode" />
+      <Sidebar :samples="samples" :rejected="rejected" @delete="deleteNode" />
     </template>
     <template v-slot:header>
-      <Header @undo="undo" @redo="redo" />
+      <Header
+        :undoable="undoable"
+        :redoable="redoable"
+        @undo="undo"
+        @redo="redo"
+      />
     </template>
-    <Canvas :scene="scene" @update="updateScene" />
+    <Canvas
+      :scene="scene"
+      :rejected="rejected"
+      @update="updateScene"
+      @dropNode="dropNode"
+    />
   </Layout>
 </template>
 <script>
@@ -34,12 +44,19 @@ export default {
   },
   data() {
     return {
-      history: null
+      history: null,
+      rejected: {}
     };
   },
   computed: {
     scene() {
       return this.history ? getCurrent(this.history) : [];
+    },
+    map() {
+      return this.scene.reduce((map, item) => {
+        map[item.id] = item;
+        return map;
+      }, {});
     },
     undoable() {
       return Boolean(this.history && undoable(this.history));
@@ -49,6 +66,12 @@ export default {
     },
     hasUnsavedChanges() {
       return this.undoable;
+    },
+    samples() {
+      return ['delay', 'email', 'fork'].map((type) => ({
+        type,
+        id: nanoid()
+      }));
     },
     initialScene() {
       const id1 = nanoid();
@@ -138,65 +161,50 @@ export default {
     clear() {
       this.history = initialize(this.initialScene);
     },
-    gridToCanvasX(col) {
-      return col * this.sceneStepX + this.sceneOffsetX - this.nodeSize / 2;
-    },
-    gridToCanvasY(row) {
-      return row * this.sceneStepY + this.sceneOffsetY - this.nodeSize / 2;
-    },
-    connectionPoint(id) {
-      const node = this.tree[id];
-      if (node) {
-        return {
-          x: node.x * this.sceneStepX + this.sceneOffsetX,
-          y: node.y * this.sceneStepY + this.sceneOffsetY - this.nodeSize / 2
-        };
-      }
-    },
-    snapToGrid(x, y) {
-      const col = +Math.round((x - GRID_OFFSET_X) / GRID_STEP_X);
-      const row = +Math.round((y - GRID_OFFSET_Y) / GRID_STEP_Y);
-      return { col, row };
-    },
-    onDrop(event) {
-      const { offsetLeft, offsetTop, scrollLeft, scrollTop } =
-        this.$refs.canvas;
-      const id = event.dataTransfer.getData('id');
-      const coords = {
-        x: event.pageX - offsetLeft + scrollLeft,
-        y: event.pageY - offsetTop + scrollTop
-      };
-      const { row, col } = this.snapToGrid(coords.x, coords.y);
-      const parent = Object.values(this.tree).find((item) => {
-        return item.x === col && item.y === row;
-      });
-      if (!parent) {
-        return;
-      }
-      const pickerItem = this.pickerItems.find((e) => e.id === id);
-      if (pickerItem) {
-        return this.placeNewNode(parent, pickerItem);
-      }
-      const sceneItem = this.scene.find((e) => e.id === +id);
-      if (sceneItem) {
-        return this.moveNode(parent, sceneItem);
-      }
-    },
-    onDelete(event) {
-      const id = +event.dataTransfer.getData('id');
-      const parent = this.scene.find((e) => e.left === id || e.right === id);
-      if (!parent) {
-        // Error - root deletion
-        const node = this.scene.find((e) => e.id);
-        this.reject(node.id);
-        return;
-      }
-      if (parent.left === id) {
-        this.deleteSubtree(parent, true);
-      }
-      if (parent.right === id) {
-        this.deleteSubtree(parent, false);
-      }
+    // gridToCanvasX(col) {
+    //   return col * this.sceneStepX + this.sceneOffsetX - this.nodeSize / 2;
+    // },
+    // gridToCanvasY(row) {
+    //   return row * this.sceneStepY + this.sceneOffsetY - this.nodeSize / 2;
+    // },
+    // connectionPoint(id) {
+    //   const node = this.tree[id];
+    //   if (node) {
+    //     return {
+    //       x: node.x * this.sceneStepX + this.sceneOffsetX,
+    //       y: node.y * this.sceneStepY + this.sceneOffsetY - this.nodeSize / 2
+    //     };
+    //   }
+    // },
+    // snapToGrid(x, y) {
+    //   const col = +Math.round((x - GRID_OFFSET_X) / GRID_STEP_X);
+    //   const row = +Math.round((y - GRID_OFFSET_Y) / GRID_STEP_Y);
+    //   return { col, row };
+    // },
+    dropNode({ from, to }) {
+      console.log({ from, to });
+      // const { offsetLeft, offsetTop, scrollLeft, scrollTop } =
+      //   this.$refs.canvas;
+      // const id = event.dataTransfer.getData('id');
+      // const coords = {
+      //   x: event.pageX - offsetLeft + scrollLeft,
+      //   y: event.pageY - offsetTop + scrollTop
+      // };
+      // const { row, col } = this.snapToGrid(coords.x, coords.y);
+      // const parent = Object.values(this.tree).find((item) => {
+      //   return item.x === col && item.y === row;
+      // });
+      // if (!parent) {
+      //   return;
+      // }
+      // const pickerItem = this.pickerItems.find((e) => e.id === id);
+      // if (pickerItem) {
+      //   return this.placeNewNode(parent, pickerItem);
+      // }
+      // const sceneItem = this.scene.find((e) => e.id === +id);
+      // if (sceneItem) {
+      //   return this.moveNode(parent, sceneItem);
+      // }
     },
     placeNewNode(parent, pickerItem) {
       const parentId = parent.id;
@@ -269,10 +277,32 @@ export default {
       });
       this.updateScene(scene);
     },
+    deleteNode(event) {
+      const id = event.dataTransfer.getData('id');
+      const node = this.map[id];
+      if (!node) {
+        // Error - deleted node deletion
+        this.reject('trash');
+        return;
+      }
+      const parent = this.map[node.parent];
+      if (!parent) {
+        // Error - root deletion
+        this.reject(node.id);
+        this.reject('trash');
+        return;
+      }
+      if (parent.left === id) {
+        this.deleteSubtree(parent, true);
+      }
+      if (parent.right === id) {
+        this.deleteSubtree(parent, false);
+      }
+    },
     reject(id) {
-      this.rejected = id;
+      this.rejected[id] = true;
       setTimeout(() => {
-        this.rejected = null;
+        this.rejected[id] = false;
       }, 1000);
     },
     deleteSubtree(parent, left) {
