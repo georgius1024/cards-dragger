@@ -164,12 +164,12 @@ function moveNode(tree, target, source, left = true) {
   if (!targetNode) {
     throw new Error('Target node not found!!!');
   }
-  if (!targetNode.parent) {
-    throw new Error('Can not move root!!!');
-  }
   const sourceNode = tree[source];
   if (!sourceNode) {
     throw new Error('Source node not found!!!');
+  }
+  if (!sourceNode.parent) {
+    throw new Error('Can not move root!!!');
   }
   if (sourceNode.left && sourceNode.right) {
     throw new Error("Can't move subtree!!!");

@@ -12,7 +12,7 @@
       />
     </template>
     <Canvas
-      :scene="scene"
+      :scene="clonedScene"
       :rejected="rejected"
       @update="updateScene"
       @dropNode="dropNode"
@@ -54,6 +54,9 @@ export default {
   computed: {
     scene() {
       return this.history ? getCurrent(this.history) : [];
+    },
+    clonedScene() {
+      return treeUtils.clone(this.scene);
     },
     undoable() {
       return Boolean(this.history && undoable(this.history));
@@ -254,7 +257,8 @@ export default {
             left
           );
           this.updateScene(updated);
-        } catch {
+        } catch (e) {
+          console.error(e);
           return this.reject(targetNode.id);
         }
       }
