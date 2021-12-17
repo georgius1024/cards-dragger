@@ -36,6 +36,7 @@ import {
   undo,
   redo
 } from './utils/history';
+import * as treeUtils from './utils/tree';
 
 export default {
   components: {
@@ -53,12 +54,6 @@ export default {
   computed: {
     scene() {
       return this.history ? getCurrent(this.history) : [];
-    },
-    map() {
-      return this.scene.reduce((map, item) => {
-        map[item.id] = item;
-        return map;
-      }, {});
     },
     undoable() {
       return Boolean(this.history && undoable(this.history));
@@ -84,11 +79,54 @@ export default {
       }));
     },
     initialScene() {
-      return initialState;
+      return [
+        {
+          id: nanoid(),
+          parent: null,
+          left: null,
+          type: 'flash'
+        }
+      ];
     }
   },
   created() {
-    this.history = initialize(this.initialScene);
+    const id1 = nanoid();
+    const id2 = nanoid();
+    const id3 = nanoid();
+    const id4 = nanoid();
+    const id5 = nanoid();
+    const initial = [
+      {
+        id: id1,
+        type: 'flash',
+        left: null
+      },
+      {
+        id: id2,
+        parent: id1,
+        type: 'email',
+        left: true
+      },
+      {
+        id: id3,
+        parent: id2,
+        type: 'fork',
+        left: true
+      },
+      {
+        id: id4,
+        parent: id3,
+        type: 'headset',
+        left: true
+      },
+      {
+        id: id5,
+        parent: id3,
+        type: 'account',
+        left: false
+      }
+    ];
+    this.history = initialize(treeUtils.load(initial));
   },
   mounted() {
     // try {
@@ -138,121 +176,49 @@ export default {
       this.history = initialize(this.initialScene);
     },
     dropNode({ from, to }) {
-      if (!to || !from) {
+      if (!this.scene[to]) {
         this.reject(from);
         this.reject(to);
         return;
       }
+
       const sampleItem = this.samples.find((e) => e.id === from);
       if (sampleItem) {
-        return this.attachNewNode(from, to);
+        return this.attachNewNode(sampleItem, this.scene[to]);
       }
-      const sceneItem = this.scene.find((e) => e.id === from);
+      const sceneItem = this.scene[from];
       if (sceneItem) {
         return this.moveNode(from, to);
       }
-
-      // const { offsetLeft, offsetTop, scrollLeft, scrollTop } =
-      //   this.$refs.canvas;
-      // const id = event.dataTransfer.getData('id');
-      // const coords = {
-      //   x: event.pageX - offsetLeft + scrollLeft,
-      //   y: event.pageY - offsetTop + scrollTop
-      // };
-      // const { row, col } = this.snapToGrid(coords.x, coords.y);
-      // const parent = Object.values(this.tree).find((item) => {
-      //   return item.x === col && item.y === row;
-      // });
-      // if (!parent) {
-      //   return;
-      // }
-      // const pickerItem = this.pickerItems.find((e) => e.id === id);
-      // if (pickerItem) {
-      //   return this.placeNewNode(parent, pickerItem);
-      // }
-      // const sceneItem = this.scene.find((e) => e.id === +id);
-      // if (sceneItem) {
-      //   return this.moveNode(parent, sceneItem);
-      // }
+      return this.reject(from);
     },
     dropOff(event) {
       const from = event.dataTransfer.getData('id');
-      this.reject(from);
     },
-    attachNewNode(from, to) {
-      const target = this.map[to];
-      if (!target) {
-        this.reject(from);
-        return;
-      }
-      const sampleItem = this.samples.find((e) => e.id === from);
-      if (!sampleItem) {
-        this.reject(to);
-        return;
-      }
-      if (target.type === 'fork') {
-        if (!target.left) {
-          const nodeToMakeParent = to;
-          const nodeToInsert = {
-            ...sampleItem,
-            parent: to,
-            id: nanoid()
-          };
-          const scene = [
-            ...this.scene.map((e) => {
-              if (e.id === nodeToMakeParent) {
-                return { ...e, left: nodeToInsert.id };
-              }
-              return e;
-            }),
-            nodeToInsert
-          ];
-          this.updateScene(scene);
-        } else if (!target.right) {
-          const nodeToMakeParent = to;
-          const nodeToInsert = {
-            ...sampleItem,
-            parent: to,
-            id: nanoid()
-          };
-          const scene = [
-            ...this.scene.map((e) => {
-              if (e.id === nodeToMakeParent) {
-                return { ...e, right: nodeToInsert.id };
-              }
-              return e;
-            }),
-            nodeToInsert
-          ];
-          this.updateScene(scene);
-        } else {
-          this.reject(from);
-          this.reject(to);
+    attachNewNode(sample, targetNode) {
+      const nodeToInsert = {
+        ...sample,
+        id: nanoid()
+      };
+
+      let left = true;
+      if (targetNode.type === 'fork') {
+        if (targetNode.left && targetNode.right) {
+          this.reject(targetNode.id);
           return;
         }
-      } else {
-        // Make child for target
-        const nodeToMakeChild = target.left || target.right;
-        const nodeToMakeParent = to;
-        const nodeToInsert = {
-          ...sampleItem,
-          parent: to,
-          left: nodeToMakeChild ? nodeToMakeChild : null,
-          id: nanoid()
-        };
-        const scene = [
-          ...this.scene.map((e) => {
-            if (e.id === nodeToMakeParent) {
-              return { ...e, left: nodeToInsert.id };
-            } else if (e.id === nodeToMakeChild) {
-              return { ...e, parent: nodeToInsert.id };
-            }
-            return e;
-          }),
-          nodeToInsert
-        ];
-        this.updateScene(scene);
+        left = !targetNode.left;
       }
+
+      const updated = treeUtils.insert(
+        this.scene,
+        targetNode.id,
+        nodeToInsert.id,
+        left,
+        treeUtils.payload(nodeToInsert)
+      );
+
+      this.updateScene(updated);
     },
     hasAsParent(node, parent) {
       if (node.parent === parent.id) {

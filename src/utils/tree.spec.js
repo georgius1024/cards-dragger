@@ -1,4 +1,4 @@
-const tree = require('./tree');
+import * as tree from './tree';
 const testData = [
   { id: 100, parent: null, left: null },
   { id: 101, parent: 100, left: true },

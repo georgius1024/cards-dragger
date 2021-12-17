@@ -5,12 +5,9 @@ export default function ReingoldTilford(
 ) {
   const step = 2;
 
-  const map = nodes.reduce((map, item) => {
-    return { ...map, [item.id]: { ...item } };
-  }, {});
-  const root = map[rootId];
+  const root = nodes[rootId];
   const getNode = (id) => {
-    return map[id];
+    return nodes[id];
   };
   const traverse = (node, callback) => {
     callback(node);
@@ -156,19 +153,19 @@ export default function ReingoldTilford(
       centerFinalX(getNode(node.right));
     }
     if (node.left && node.right) {
-      const leftX = +map[node.left].final;
-      const rightX = +map[node.right].final;
+      const leftX = +nodes[node.left].final;
+      const rightX = +nodes[node.right].final;
       node.final = (leftX + rightX) / 2;
       if (stickToIntegers) {
         node.final = Math.round(node.final);
       }
     } else if (node.left) {
-      const leftX = map[node.left].final;
+      const leftX = nodes[node.left].final;
       if (leftX !== node.final) {
         node.final = leftX;
       }
     } else if (node.right) {
-      const rightX = map[node.right].final;
+      const rightX = nodes[node.right].final;
       if (rightX !== node.final) {
         node.final = rightX;
       }
@@ -184,5 +181,5 @@ export default function ReingoldTilford(
     centerFinalX(root);
   }
   placeX(root);
-  return map;
+  return nodes;
 }

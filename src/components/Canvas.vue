@@ -32,7 +32,7 @@ export default {
   },
   props: {
     scene: {
-      type: Array,
+      type: Object,
       required: true
     },
     rejected: {
@@ -42,16 +42,10 @@ export default {
   },
   computed: {
     root() {
-      return this.scene.find((e) => !e.parent);
+      return Object.values(this.scene).find((e) => !e.parent);
     },
     tree() {
-      return ReingoldTilford(this.scene, this.root.id);
-    },
-    map() {
-      return this.scene.reduce((map, item) => {
-        map[item.id] = item;
-        return map;
-      }, {});
+      return ReingoldTilford(this.scene, this.root?.id ?? 0);
     },
     nodeWidth() {
       return NODE_WIDTH;
