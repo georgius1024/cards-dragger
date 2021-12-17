@@ -277,7 +277,14 @@ export default {
         this.reject(from);
         return;
       }
-      if (target.type === 'fork' || source.type === 'fork') {
+      if (source.type === 'fork') {
+        if (target.left || target.right) {
+          this.reject(from);
+          this.reject(to);
+          return;
+        }
+      }
+      if (target.type === 'fork') {
         this.reject(to);
         this.reject(from);
         return;
@@ -350,6 +357,14 @@ export default {
         this.reject('trash');
         return;
       }
+      if (node.type === 'fork') {
+        if (node.left || node.right) {
+          this.reject('id');
+          this.reject('trash');
+        }
+        return;
+      }
+
       const parent = this.map[node.parent];
       if (!parent) {
         // Error - root deletion
