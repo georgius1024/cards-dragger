@@ -1,7 +1,16 @@
-# Vue 3 + Vite
+# Prototype for automation builder
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Todo
 
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+- [ ] Tree nodes with 'fork' attribute to improve algroritms
+- [ ] Remove classs from node drawing components to global style
+- [ ] Rename components 'card' => 'node'
+- [ ] Draw 'yes' and 'no' on arrows
+- [ ] Generalize color classes on global css
+- [ ] Trash as regular node object
+- [ ] Save/load local storage
+- [ ] Zoom control
+- [ ] Node editing sidebar
+- [ ] Better space on canvas (need margins on bottom/right)
+- [ ] Stylize scrollbars for canvas
+- [ ] Stylize node display, add texts
