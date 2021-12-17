@@ -93,7 +93,7 @@ export default {
       if (node.type === 'fork') {
         return ForkCard;
       }
-      if (node.type === 'stop') {
+      if (['stop', 'stop-left', 'stop-right'].includes(node.type)) {
         return TerminatorNode;
       }
       return ActionCard;

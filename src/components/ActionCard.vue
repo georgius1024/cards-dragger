@@ -58,7 +58,10 @@ export default {
           'fork',
           'account',
           'run',
-          'headset'
+          'headset',
+          'stop',
+          'stop-left',
+          'stop-right'
         ].includes(value);
       }
     },

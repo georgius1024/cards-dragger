@@ -22,7 +22,6 @@
 </template>
 <script>
 import { nanoid } from 'nanoid';
-import initialState from './initialState.json';
 import Layout from './components/Layout.vue';
 import Sidebar from './components/Sidebar.vue';
 import Header from './components/Header.vue';
@@ -57,7 +56,6 @@ export default {
     },
     widerScene() {
       const scene = treeUtils.clone(this.scene);
-
       return Object.keys(scene).reduce((map, key) => {
         const node = scene[key];
         map[key] = node;
@@ -65,7 +63,7 @@ export default {
           const terminator = {
             id: nanoid(),
             parent: node.id,
-            type: 'stop'
+            type: 'stop-left'
           };
           node.left = terminator.id;
           map[terminator.id] = terminator;
@@ -74,7 +72,7 @@ export default {
           const terminator = {
             id: nanoid(),
             parent: node.id,
-            type: 'stop'
+            type: 'stop-right'
           };
           node.right = terminator.id;
           map[terminator.id] = terminator;
@@ -92,18 +90,12 @@ export default {
       return this.undoable;
     },
     samples() {
-      return [
-        'delay',
-        'email',
-        'fork',
-        'flash',
-        'run',
-        'account',
-        'headset'
-      ].map((type) => ({
-        type,
-        id: nanoid()
-      }));
+      return ['delay', 'email', 'fork', 'run', 'account', 'headset'].map(
+        (type) => ({
+          type,
+          id: nanoid()
+        })
+      );
     },
     initialScene() {
       return [
@@ -202,7 +194,7 @@ export default {
     clear() {
       this.history = initialize(this.initialScene);
     },
-    dropNode({ from, to }) {
+    dropNode({ from, to, left = null }) {
       const targetNode = this.scene[to];
       if (!targetNode) {
         this.reject(from);
@@ -212,11 +204,11 @@ export default {
 
       const sampleItem = this.samples.find((e) => e.id === from);
       if (sampleItem) {
-        return this.attachNewNode(sampleItem, targetNode);
+        return this.attachNewNode(sampleItem, targetNode, left);
       }
       const sceneItem = this.scene[from];
       if (sceneItem) {
-        return this.moveNode(sceneItem, targetNode);
+        return this.moveNode(sceneItem, targetNode, left);
       }
       return this.reject(from);
     },
@@ -224,34 +216,40 @@ export default {
       const from = event.dataTransfer.getData('id');
       this.reject(from);
     },
-    attachNewNode(sample, targetNode) {
+    attachNewNode(sample, targetNode, left) {
       const nodeToInsert = {
         ...sample,
         id: nanoid()
       };
-
-      let left = true;
+      let toLeft = true;
       if (targetNode.type === 'fork') {
         if (targetNode.left && targetNode.right) {
           return this.reject(targetNode.id);
         }
-        left = !targetNode.left;
+        if (left === null) {
+          toLeft = !targetNode.left;
+        } else {
+          toLeft = left;
+        }
+        if (toLeft && targetNode.left) {
+          return this.reject(targetNode.id);
+        }
       }
       try {
         const updated = treeUtils.insert(
           this.scene,
           targetNode.id,
           nodeToInsert.id,
-          left,
+          toLeft,
           treeUtils.payload(nodeToInsert)
         );
-
         this.updateScene(updated);
-      } catch {
+      } catch (e) {
+        console.error(e);
         return this.reject(targetNode.id);
       }
     },
-    moveNode(sourceNode, targetNode) {
+    moveNode(sourceNode, targetNode, left) {
       if (sourceNode.type === 'fork') {
         try {
           const validMove = !targetNode.left || targetNode.type === 'fork';
@@ -265,20 +263,31 @@ export default {
             !targetNode.left
           );
           this.updateScene(updated);
-        } catch {
+        } catch (e) {
+          console.error(e);
           return this.reject(targetNode.id);
         }
       } else {
         if (targetNode.left && targetNode.right) {
           return this.reject(targetNode.id);
         }
-        const left = targetNode.type !== 'fork' || !targetNode.left;
+        let toLeft = true;
+        if (targetNode.type === 'fork') {
+          if (left === null) {
+            toLeft = !targetNode.left;
+          } else {
+            toLeft = left;
+          }
+          if (toLeft && targetNode.left) {
+            return this.reject(targetNode.id);
+          }
+        }
         try {
           const updated = treeUtils.moveNode(
             this.scene,
             targetNode.id,
             sourceNode.id,
-            left
+            toLeft
           );
           this.updateScene(updated);
         } catch (e) {
@@ -304,7 +313,8 @@ export default {
         const keepLeft = Boolean(node.left);
         const updated = treeUtils.removeNode(this.scene, id, keepLeft);
         this.updateScene(updated);
-      } catch {
+      } catch (e) {
+        console.error(error);
         return this.reject(id);
       }
     },
