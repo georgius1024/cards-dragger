@@ -1,13 +1,20 @@
 <template>
   <div class="sidebar">
-    <ActionCard
-      v-for="card in cards"
-      :key="card.type"
-      :id="card.id"
-      :type="card.type"
-    />
+    <div v-for="card in samples" class="container" :key="card.type">
+      <ActionCard
+        :rejected="Boolean(rejected[card.id])"
+        :id="card.id"
+        :type="card.type"
+      />
+    </div>
     <div class="separator"></div>
-    <div class="trash" @drop="onDelete" @dragover.prevent @dragenter.prevent>
+    <div
+      class="trash"
+      :class="{ rejected: rejected['trash'] }"
+      @drop="onDelete"
+      @dragover.prevent
+      @dragenter.prevent
+    >
       <svg style="width: 96px; height: 96px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -18,18 +25,19 @@
   </div>
 </template>
 <script>
-import { nanoid } from 'nanoid';
 import ActionCard from './ActionCard.vue';
 export default {
   components: {
     ActionCard
   },
-  computed: {
-    cards() {
-      return ['flash', 'delay', 'email', 'fork'].map((type) => ({
-        type,
-        id: nanoid()
-      }));
+  props: {
+    samples: {
+      type: Array,
+      required: true
+    },
+    rejected: {
+      type: Object,
+      required: true
     }
   },
   methods: {

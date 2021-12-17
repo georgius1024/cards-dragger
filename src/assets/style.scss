@@ -5,9 +5,12 @@
   box-sizing: border-box;
 }
 
-body, td, th {
+body,
+td,
+th {
   font-size: 16px;
-  font-family: Roboto, 'Segoe UI', Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: Roboto, 'Segoe UI', Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333;
@@ -15,4 +18,29 @@ body, td, th {
 
 h1 {
   size: 16px;
+}
+
+.rejected {
+  animation: 1s ease-in-out reject;
+}
+
+@keyframes reject {
+  0% {
+    transform: translateX(0);
+  }
+  6.5% {
+    transform: translateX(-6px) rotateY(-9deg);
+  }
+  18.5% {
+    transform: translateX(5px) rotateY(7deg);
+  }
+  31.5% {
+    transform: translateX(-3px) rotateY(-5deg);
+  }
+  43.5% {
+    transform: translateX(2px) rotateY(3deg);
+  }
+  50% {
+    transform: translateX(0);
+  }
 }
