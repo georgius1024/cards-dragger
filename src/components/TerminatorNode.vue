@@ -43,7 +43,6 @@ export default {
       const from = event.dataTransfer.getData('id');
       const to = this.parent;
       const left = ['stop-left', 'stop'].includes(this.type);
-      console.log(this.type, { from, to, left });
       this.$emit('dropOn', { from, to, left });
     }
   }

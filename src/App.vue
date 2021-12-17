@@ -148,14 +148,12 @@ export default {
     this.history = initialize(treeUtils.load(initial));
   },
   mounted() {
-    // try {
-    //   const scene = JSON.parse(localStorage['scene']);
-    //   if (Array.isArray(scene)) {
-    //     this.history = initialize(scene);
-    //   }
-    // } catch {
-    //   this.history = initialize(this.initialScene);
-    // }
+    try {
+      this.load();
+    } catch (e) {
+      console.error(e);
+      this.history = initialize(treeUtils.load(this.initialScene));
+    }
     this.keyHandler = (e) => {
       const undoPressed =
         (e.code === 'KeyZ' && e.ctrlKey) ||
@@ -177,7 +175,14 @@ export default {
   },
   methods: {
     save() {
-      localStorage['scene'] = JSON.stringify(this.scene);
+      const savedScene = treeUtils.pack(this.scene);
+      localStorage['savedScene'] = JSON.stringify(savedScene);
+    },
+    load() {
+      const savedScene = JSON.parse(localStorage['savedScene']);
+      if (Array.isArray(savedScene)) {
+        this.history = initialize(treeUtils.load(savedScene));
+      }
     },
     updateScene(scene) {
       this.history = addState(this.history, scene);
@@ -314,7 +319,7 @@ export default {
         const updated = treeUtils.removeNode(this.scene, id, keepLeft);
         this.updateScene(updated);
       } catch (e) {
-        console.error(error);
+        console.error(e);
         return this.reject(id);
       }
     },
