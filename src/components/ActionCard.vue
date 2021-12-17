@@ -18,36 +18,14 @@
       {{ type.toUpperCase() }}
     </div>
   </div>
-  <template v-if="isFork">
-    <SideConnector
-      v-if="leftConnection"
-      :fromX="leftConnectionPoint.x"
-      :fromY="leftConnectionPoint.y"
-      :toX="leftConnection.x"
-      :toY="leftConnection.y"
-      stroke="4"
-      radius="24"
-    />
-    <SideConnector
-      v-if="rightConnection"
-      :fromX="rightConnectionPoint.x"
-      :fromY="rightConnectionPoint.y"
-      :toX="rightConnection.x"
-      :toY="rightConnection.y"
-      stroke="4"
-      radius="24"
-    />
-  </template>
-  <template v-else>
-    <LineConnector
-      v-if="singleChild"
-      :fromX="centralConnectionPoint.x"
-      :fromY="centralConnectionPoint.y"
-      :toX="singleChildConnection.x"
-      :toY="singleChildConnection.y"
-      stroke="4"
-    />
-  </template>
+  <LineConnector
+    v-if="singleChild"
+    :fromX="centralConnectionPoint.x"
+    :fromY="centralConnectionPoint.y"
+    :toX="singleChildConnection.x"
+    :toY="singleChildConnection.y"
+    stroke="4"
+  />
 </template>
 <script>
 import flash from '../assets/icons/flash.svg';
@@ -58,15 +36,16 @@ import account from '../assets/icons/account.svg';
 import run from '../assets/icons/run.svg';
 import headset from '../assets/icons/headset.svg';
 import LineConnector from './LineConnector.vue';
-import SideConnector from './SideConnector.vue';
 
 export default {
   components: {
-    LineConnector,
-    SideConnector
+    LineConnector
   },
   props: {
     id: {
+      type: [String, Number]
+    },
+    parent: {
       type: [String, Number]
     },
     type: {

@@ -12,7 +12,7 @@
       />
     </template>
     <Canvas
-      :scene="clonedScene"
+      :scene="widerScene"
       :rejected="rejected"
       @update="updateScene"
       @dropNode="dropNode"
@@ -55,8 +55,32 @@ export default {
     scene() {
       return this.history ? getCurrent(this.history) : [];
     },
-    clonedScene() {
-      return treeUtils.clone(this.scene);
+    widerScene() {
+      const scene = treeUtils.clone(this.scene);
+
+      return Object.keys(scene).reduce((map, key) => {
+        const node = scene[key];
+        map[key] = node;
+        if (!node.left) {
+          const terminator = {
+            id: nanoid(),
+            parent: node.id,
+            type: 'stop'
+          };
+          node.left = terminator.id;
+          map[terminator.id] = terminator;
+        }
+        if (node.type === 'fork' && !node.right) {
+          const terminator = {
+            id: nanoid(),
+            parent: node.id,
+            type: 'stop'
+          };
+          node.right = terminator.id;
+          map[terminator.id] = terminator;
+        }
+        return map;
+      }, {});
     },
     undoable() {
       return Boolean(this.history && undoable(this.history));

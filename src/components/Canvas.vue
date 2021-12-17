@@ -1,8 +1,10 @@
 <template>
   <main class="canvas" ref="canvas" @dragover.prevent @dragenter.prevent>
-    <ActionCard
+    <component
       v-for="item in tree"
+      :is="getComponent(item)"
       :key="item.id"
+      :parent="item.parent"
       :id="item.id"
       :x="gridToCanvasX(item.x)"
       :y="gridToCanvasY(item.y)"
@@ -20,6 +22,9 @@
 <script>
 import ReingoldTilford from '../utils/ReingoldTilford';
 import ActionCard from './ActionCard.vue';
+import ForkCard from './ForkCard.vue';
+import TerminatorNode from './TerminatorNode.vue';
+
 const GRID_STEP_X = 200;
 const GRID_STEP_Y = 120;
 const GRID_OFFSET_X = 120;
@@ -28,7 +33,9 @@ const NODE_WIDTH = 180;
 const NODE_HEIGHT = 60;
 export default {
   components: {
-    ActionCard
+    ActionCard,
+    ForkCard,
+    TerminatorNode
   },
   props: {
     scene: {
@@ -81,6 +88,15 @@ export default {
           y: node.y * this.sceneStepY + this.sceneOffsetY - this.nodeHeight / 2
         };
       }
+    },
+    getComponent(node) {
+      if (node.type === 'fork') {
+        return ForkCard;
+      }
+      if (node.type === 'stop') {
+        return TerminatorNode;
+      }
+      return ActionCard;
     }
   }
 };
