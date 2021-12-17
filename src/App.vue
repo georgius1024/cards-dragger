@@ -36,7 +36,7 @@ import {
   undo,
   redo
 } from './utils/history';
-import * as treeUtils from './utils/tree';
+const treeUtils = require('./utils/tree');
 
 export default {
   components: {
@@ -176,7 +176,8 @@ export default {
       this.history = initialize(this.initialScene);
     },
     dropNode({ from, to }) {
-      if (!this.scene[to]) {
+      const targetNode = this.scene[to];
+      if (!targetNode) {
         this.reject(from);
         this.reject(to);
         return;
@@ -184,16 +185,17 @@ export default {
 
       const sampleItem = this.samples.find((e) => e.id === from);
       if (sampleItem) {
-        return this.attachNewNode(sampleItem, this.scene[to]);
+        return this.attachNewNode(sampleItem, targetNode);
       }
       const sceneItem = this.scene[from];
       if (sceneItem) {
-        return this.moveNode(from, to);
+        return this.moveNode(sceneItem, targetNode);
       }
       return this.reject(from);
     },
     dropOff(event) {
       const from = event.dataTransfer.getData('id');
+      this.reject(from);
     },
     attachNewNode(sample, targetNode) {
       const nodeToInsert = {
@@ -204,145 +206,78 @@ export default {
       let left = true;
       if (targetNode.type === 'fork') {
         if (targetNode.left && targetNode.right) {
-          this.reject(targetNode.id);
-          return;
+          return this.reject(targetNode.id);
         }
         left = !targetNode.left;
       }
+      try {
+        const updated = treeUtils.insert(
+          this.scene,
+          targetNode.id,
+          nodeToInsert.id,
+          left,
+          treeUtils.payload(nodeToInsert)
+        );
 
-      const updated = treeUtils.insert(
-        this.scene,
-        targetNode.id,
-        nodeToInsert.id,
-        left,
-        treeUtils.payload(nodeToInsert)
-      );
-
-      this.updateScene(updated);
+        this.updateScene(updated);
+      } catch {
+        return this.reject(targetNode.id);
+      }
     },
-    hasAsParent(node, parent) {
-      if (node.parent === parent.id) {
-        return true;
-      }
-      const currentParent = this.map[node.parent];
-      return currentParent && this.hasAsParent(currentParent, parent);
-    },
-    moveNode(from, to) {
-      const source = { ...this.map[from] };
-      if (!source) {
-        this.reject(to);
-        return;
-      }
-      if (!source.parent) {
-        this.reject(from);
-        return;
-      }
-
-      const target = { ...this.map[to] };
-      if (!target) {
-        this.reject(from);
-        return;
-      }
-      if (source.type === 'fork') {
-        if (target.left || target.right) {
-          this.reject(from);
-          this.reject(to);
-          return;
+    moveNode(sourceNode, targetNode) {
+      if (sourceNode.type === 'fork') {
+        try {
+          const validMove = !targetNode.left || targetNode.type === 'fork';
+          if (!validMove) {
+            throw new Error('Drop subtree on leafs of forks with empty slots');
+          }
+          const updated = treeUtils.moveSubtree(
+            this.scene,
+            targetNode.id,
+            sourceNode.id,
+            !targetNode.left
+          );
+          this.updateScene(updated);
+        } catch {
+          return this.reject(targetNode.id);
+        }
+      } else {
+        if (targetNode.left && targetNode.right) {
+          return this.reject(targetNode.id);
+        }
+        const left = targetNode.type !== 'fork' || !targetNode.left;
+        try {
+          const updated = treeUtils.moveNode(
+            this.scene,
+            targetNode.id,
+            sourceNode.id,
+            left
+          );
+          this.updateScene(updated);
+        } catch {
+          return this.reject(targetNode.id);
         }
       }
-      if (target.type === 'fork') {
-        this.reject(to);
-        this.reject(from);
-        return;
-      }
-      const parent = this.map[target.parent];
-      if (!parent || parent.type === 'fork') {
-        this.reject(to);
-        return;
-      }
-      if (to === from) {
-        this.reject(to);
-        return;
-      }
-      if (source.parent === target.id) {
-        return this.moveNode(to, from);
-      }
-      const changedNodes = {};
-      changedNodes[source.id] = { ...source };
-      changedNodes[target.id] = { ...target };
-      changedNodes[source.parent] = { ...this.map[source.parent] };
-
-      if (source.left) {
-        changedNodes[source.left] = { ...this.map[source.left] };
-      }
-      if (target.left) {
-        changedNodes[target.left] = { ...this.map[target.left] };
-      }
-
-      const sourceParent = changedNodes[source.parent];
-      const sourceChild = changedNodes[source.left];
-      const targetChild = changedNodes[target.left];
-      const sourceNode = changedNodes[source.id];
-      const targetNode = changedNodes[target.id];
-      sourceParent.left =
-        sourceParent.left === source.id ? sourceChild?.id : sourceParent.left;
-      sourceParent.right =
-        sourceParent.right === source.id ? sourceChild?.id : sourceParent.right;
-
-      if (sourceChild) {
-        sourceChild.parent = sourceParent.id;
-      }
-
-      if (targetChild) {
-        targetChild.parent = source.id;
-      }
-
-      targetNode.left = sourceNode.id;
-      sourceNode.parent = targetNode.id;
-      sourceNode.left = targetChild && targetChild.id;
-      console.log(changedNodes);
-
-      const scene = [
-        ...this.scene.map((e) => {
-          if (changedNodes[e.id]) {
-            return changedNodes[e.id];
-          }
-          return e;
-        })
-      ];
-
-      console.log(source, target);
-      console.dir(JSON.parse(JSON.stringify(scene)));
-      this.updateScene(scene);
     },
     deleteNode(event) {
       const id = event.dataTransfer.getData('id');
-      const node = this.map[id];
+      const node = this.scene[id];
       if (!node) {
         // Error - deleted node deletion
         this.reject('trash');
         return;
       }
-      if (node.type === 'fork') {
-        if (node.left || node.right) {
-          this.reject('id');
-          this.reject('trash');
-        }
-        return;
-      }
-
-      const parent = this.map[node.parent];
-      if (!parent) {
-        // Error - root deletion
-        this.reject(node.id);
+      if (node.left && node.right) {
+        this.reject(id);
         this.reject('trash');
         return;
       }
-      if (parent.left === id) {
-        this.deleteSubtree(parent, true);
-      }
-      if (parent.right === id) {
-        this.deleteSubtree(parent, false);
+      try {
+        const keepLeft = Boolean(node.left);
+        const updated = treeUtils.removeNode(this.scene, id, keepLeft);
+        this.updateScene(updated);
+      } catch {
+        return this.reject(id);
       }
     },
     reject(id) {
@@ -350,30 +285,6 @@ export default {
       setTimeout(() => {
         this.rejected[id] = false;
       }, 1000);
-    },
-    deleteSubtree(parent, left) {
-      const nodesToDelete = [];
-      const startFrom = left ? parent.left : parent.right;
-      const walk = (node) => {
-        if (node.left) {
-          walk(this.map[node.left]);
-        }
-        if (node.right) {
-          walk(this.map[node.right]);
-        }
-        nodesToDelete.push(node.id);
-      };
-      walk(this.map[startFrom]);
-      const newParent = { ...parent };
-      if (left) {
-        delete newParent.left;
-      } else {
-        delete newParent.right;
-      }
-      const scene = this.scene
-        .filter((e) => !nodesToDelete.includes(e.id))
-        .map((e) => (e.id === parent.id ? newParent : e));
-      this.updateScene(scene);
     }
   }
 };

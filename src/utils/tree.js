@@ -181,6 +181,18 @@ function moveNode(tree, target, source, left = true) {
 
   return insert(updated, target, sourceNode.id, left, payload(sourceNode));
 }
+function hasAsParent(tree, node, candidate) {
+  const walk = (node) => {
+    if (node.id === candidate) {
+      return true;
+    } else if (node.parent) {
+      return walk(tree[node.parent]);
+    } else {
+      return false;
+    }
+  };
+  return walk(tree[node]);
+}
 function moveSubtree(tree, target, source, left = true) {
   const updatedTree = clone(tree);
   const targetNode = updatedTree[target];
@@ -190,16 +202,16 @@ function moveSubtree(tree, target, source, left = true) {
   if (!targetNode.parent) {
     throw new Error('Can not move root!!!');
   }
-
   if ((targetNode.left && left) || (targetNode.right && !left)) {
     throw new Error('Can not move there!!!');
   }
-
   const sourceNode = updatedTree[source];
   if (!sourceNode) {
     throw new Error('Source node not found!!!');
   }
-
+  if (hasAsParent(tree, targetNode.id, sourceNode.id)) {
+    throw new Error('Can not move node to its children!');
+  }
   // update old parent, remove link to source node
   const oldParentNode = updatedTree[sourceNode.parent];
   if (oldParentNode.left === sourceNode.id) {
@@ -208,7 +220,6 @@ function moveSubtree(tree, target, source, left = true) {
   if (oldParentNode.right === sourceNode.id) {
     delete oldParentNode.right;
   }
-
   // update target, add link to source node
   if (left) {
     targetNode.left = sourceNode.id;
@@ -222,7 +233,7 @@ function moveSubtree(tree, target, source, left = true) {
   return updatedTree;
 }
 
-export {
+module.exports = {
   valid,
   load,
   pack,
@@ -233,6 +244,7 @@ export {
   payload,
   removeNode,
   removeSubtree,
-  moveSubtree,
-  moveNode
+  hasAsParent,
+  moveNode,
+  moveSubtree
 };
