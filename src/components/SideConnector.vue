@@ -66,11 +66,14 @@
       fill="white"
       stroke-width="2"
     />
+    <text :x="textPoint.x" :y="textPoint.y" dx="-20" class="small">
+      {{ text }}
+    </text>
   </svg>
 </template>
 <script>
 export default {
-  props: ['fromX', 'fromY', 'toX', 'toY', 'stroke', 'radius'],
+  props: ['fromX', 'fromY', 'toX', 'toY', 'stroke', 'radius', 'text'],
   computed: {
     isRight() {
       return this.toX > this.fromX;
@@ -111,6 +114,15 @@ export default {
         y: this.fromY < this.toY ? this.padding : this.height - this.padding
       };
     },
+    textPoint() {
+      return {
+        x:
+          this.fromX < this.toX
+            ? this.padding + 30
+            : this.width - this.padding - 30,
+        y: this.fromY < this.toY ? this.padding : this.height - this.padding
+      };
+    },
     endingPoint() {
       return {
         x: this.fromX < this.toX ? this.width - this.padding : this.padding,
@@ -146,5 +158,13 @@ export default {
 <style lang="scss" scoped>
 .connector {
   transition: all 200ms ease;
+  .small {
+    position: absolute;
+    padding: 8px;
+    border: 1px solid blue;
+    background-color: white;
+    width: 120px;
+    text-align: right;
+  }
 }
 </style>

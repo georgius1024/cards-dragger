@@ -25,6 +25,7 @@
       :fromY="leftConnectionPoint.y"
       :toX="leftConnection.x"
       :toY="leftConnection.y"
+      text="Yes"
       stroke="4"
       radius="24"
     />
@@ -34,6 +35,7 @@
       :fromY="rightConnectionPoint.y"
       :toX="rightConnection.x"
       :toY="rightConnection.y"
+      text="No"
       stroke="4"
       radius="24"
     />
@@ -44,6 +46,7 @@
       :fromY="centralConnectionPoint.y"
       :toX="singleChildConnection.x"
       :toY="singleChildConnection.y"
+      text="X3"
       stroke="4"
     />
   </template>
