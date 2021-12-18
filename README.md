@@ -11,6 +11,6 @@ Todo
 - [ ] Save/load local storage
 - [ ] Zoom control
 - [ ] Node editing sidebar
-- [ ] Better space on canvas (need margins on bottom/right)
+- [x] Better space on canvas (need margins on bottom/right)
 - [ ] Stylize scrollbars for canvas
 - [ ] Stylize node display, add texts

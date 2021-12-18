@@ -1,5 +1,11 @@
 <template>
-  <main class="canvas" ref="canvas" @dragover.prevent @dragenter.prevent>
+  <main
+    class="canvas"
+    ref="canvas"
+    :style="canvasStyle"
+    @dragover.prevent
+    @dragenter.prevent
+  >
     <component
       v-for="item in tree"
       :is="getComponent(item)"
@@ -71,6 +77,30 @@ export default {
     },
     sceneStepY() {
       return GRID_STEP_Y;
+    },
+    sceneMaxWidth() {
+      const maxX = Object.values(this.tree).reduce((maxX, node) => {
+        if (node.x > maxX) {
+          return node.x;
+        }
+        return maxX;
+      }, -Infinity);
+      return this.gridToCanvasX(maxX + 1);
+    },
+    sceneMaxHeight() {
+      const maxY = Object.values(this.tree).reduce((maxY, node) => {
+        if (node.y > maxY) {
+          return node.y;
+        }
+        return maxY;
+      }, -Infinity);
+      return this.gridToCanvasY(maxY + 1);
+    },
+    canvasStyle() {
+      return {
+        width: `${this.sceneMaxWidth}px`,
+        height: `${this.sceneMaxHeight}px`
+      };
     }
   },
   methods: {
