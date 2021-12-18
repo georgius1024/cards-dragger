@@ -9,6 +9,7 @@
         :redoable="redoable"
         @undo="undo"
         @redo="redo"
+        @erase="erase"
       />
     </template>
     <Canvas
@@ -130,6 +131,7 @@ export default {
         id: id3,
         parent: id2,
         type: 'fork',
+        fork: true,
         left: true
       },
       {
@@ -152,7 +154,8 @@ export default {
       this.load();
     } catch (e) {
       console.error(e);
-      this.history = initialize(treeUtils.load(this.initialScene));
+      // this.history = initialize(treeUtils.load(this.initialScene));
+      this.erase();
     }
     this.keyHandler = (e) => {
       const undoPressed =
@@ -179,9 +182,14 @@ export default {
       localStorage['savedScene'] = JSON.stringify(savedScene);
     },
     load() {
-      const savedScene = JSON.parse(localStorage['savedScene']);
-      if (Array.isArray(savedScene)) {
-        this.history = initialize(treeUtils.load(savedScene));
+      try {
+        const savedScene = JSON.parse(localStorage['savedScene']);
+        if (Array.isArray(savedScene)) {
+          this.history = initialize(treeUtils.load(savedScene));
+        }
+      } catch (e) {
+        console.error(e);
+        this.erase();
       }
     },
     updateScene(scene) {
@@ -196,10 +204,11 @@ export default {
       this.history = redo(this.history);
       this.save();
     },
-    clear() {
-      this.history = initialize(this.initialScene);
+    erase() {
+      this.history = initialize(treeUtils.load(this.initialScene));
     },
     dropNode({ from, to, left = null }) {
+      console.log({ from, to, left }, Object.keys(this.scene), this.scene[to]);
       const targetNode = this.scene[to];
       if (!targetNode) {
         this.reject(from);
@@ -221,31 +230,18 @@ export default {
       const from = event.dataTransfer.getData('id');
       this.reject(from);
     },
-    attachNewNode(sample, targetNode, left) {
+    attachNewNode(sample, targetNode, left = null) {
       const nodeToInsert = {
         ...sample,
+        fork: sample.type === 'fork',
         id: nanoid()
       };
-      let toLeft = true;
-      if (targetNode.type === 'fork') {
-        if (targetNode.left && targetNode.right) {
-          return this.reject(targetNode.id);
-        }
-        if (left === null) {
-          toLeft = !targetNode.left;
-        } else {
-          toLeft = left;
-        }
-        if (toLeft && targetNode.left) {
-          return this.reject(targetNode.id);
-        }
-      }
       try {
         const updated = treeUtils.insert(
           this.scene,
           targetNode.id,
           nodeToInsert.id,
-          toLeft,
+          left,
           treeUtils.payload(nodeToInsert)
         );
         this.updateScene(updated);
@@ -254,69 +250,39 @@ export default {
         return this.reject(targetNode.id);
       }
     },
-    moveNode(sourceNode, targetNode, left) {
-      if (sourceNode.type === 'fork') {
-        try {
-          const validMove = !targetNode.left || targetNode.type === 'fork';
-          if (!validMove) {
-            throw new Error('Drop subtree on leafs of forks with empty slots');
-          }
+    moveNode(sourceNode, targetNode, left = null) {
+      try {
+        if (sourceNode.fork) {
           const updated = treeUtils.moveSubtree(
             this.scene,
             targetNode.id,
             sourceNode.id,
-            !targetNode.left
+            left
           );
           this.updateScene(updated);
-        } catch (e) {
-          console.error(e);
-          return this.reject(targetNode.id);
-        }
-      } else {
-        if (targetNode.left && targetNode.right) {
-          return this.reject(targetNode.id);
-        }
-        let toLeft = true;
-        if (targetNode.type === 'fork') {
-          if (left === null) {
-            toLeft = !targetNode.left;
-          } else {
-            toLeft = left;
-          }
-          if (toLeft && targetNode.left) {
-            return this.reject(targetNode.id);
-          }
-        }
-        try {
+        } else {
           const updated = treeUtils.moveNode(
             this.scene,
             targetNode.id,
             sourceNode.id,
-            toLeft
+            left
           );
           this.updateScene(updated);
-        } catch (e) {
-          console.error(e);
-          return this.reject(targetNode.id);
         }
+      } catch (e) {
+        console.error(e);
+        this.reject(targetNode.id);
+        this.reject(sourceNode.id);
       }
     },
     deleteNode(event) {
       const id = event.dataTransfer.getData('id');
-      const node = this.scene[id];
-      if (!node) {
-        // Error - deleted node deletion
-        this.reject('trash');
-        return;
-      }
-      if (node.left && node.right) {
-        this.reject(id);
-        this.reject('trash');
-        return;
-      }
       try {
-        const keepLeft = Boolean(node.left);
-        const updated = treeUtils.removeNode(this.scene, id, keepLeft);
+        const node = this.scene[id];
+        if (node.fork && (node.left || node.right)) {
+          throw new Error("Can't remove fork node with children");
+        }
+        const updated = treeUtils.removeNode(this.scene, id);
         this.updateScene(updated);
       } catch (e) {
         console.error(e);
