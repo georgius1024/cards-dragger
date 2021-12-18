@@ -3,12 +3,15 @@
     class="end-card"
     :class="{ 'drag-over': dragOver, rejected }"
     :style="cardStyle"
-    @dragend="dragEnd"
-    @dragover.prevent
-    @dragenter.prevent="dragenter"
-    @dragleave.prevent="dragleave"
-    @drop.stop="drop"
   >
+    <div
+      class="dropzone"
+      @drop.stop="drop"
+      @dragend="dragEnd"
+      @dragover.prevent
+      @dragenter.prevent="dragenter"
+      @dragleave.prevent="dragleave"
+    />
     <img :src="plus" class="icon" />
   </div>
 </template>
@@ -65,8 +68,10 @@ export default {
     transform: translate(0, -2px);
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.32);
   }
-  & * {
-    pointer-events: none;
+  .dropzone {
+    position: absolute;
+    inset: -50px;
+    transition: all 200ms ease;
   }
   &.drag-over {
     transform: scale(1.5);
