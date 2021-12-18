@@ -2,8 +2,8 @@
 
 Todo
 
-- [ ] Tree nodes with 'fork' attribute to improve algroritms
-- [ ] Remove classs from node drawing components to global style
+- [x] Tree nodes with 'fork' attribute to improve algroritms
+- [ ] Remove classes from node drawing components to global style
 - [ ] Rename components 'card' => 'node'
 - [ ] Draw 'yes' and 'no' on arrows
 - [ ] Generalize color classes on global css
