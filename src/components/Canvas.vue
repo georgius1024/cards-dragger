@@ -23,8 +23,8 @@
 </template>
 <script>
 import ReingoldTilford from '../utils/ReingoldTilford';
-import ActionCard from './ActionCard.vue';
-import ForkCard from './ForkCard.vue';
+import BaseNode from './BaseNode.vue';
+import ForkNode from './ForkNode.vue';
 import TerminatorNode from './TerminatorNode.vue';
 
 const GRID_STEP_X = 320;
@@ -33,8 +33,8 @@ const NODE_WIDTH = 300;
 const NODE_HEIGHT = 100;
 export default {
   components: {
-    ActionCard,
-    ForkCard,
+    BaseNode,
+    ForkNode,
     TerminatorNode
   },
   props: {
@@ -109,12 +109,12 @@ export default {
     },
     getComponent(node) {
       if (node.type === 'fork') {
-        return ForkCard;
+        return ForkNode;
       }
       if (['stop', 'stop-left', 'stop-right'].includes(node.type)) {
         return TerminatorNode;
       }
-      return ActionCard;
+      return BaseNode;
     }
   }
 };

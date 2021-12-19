@@ -208,7 +208,6 @@ export default {
       this.history = initialize(treeUtils.load(this.initialScene));
     },
     dropNode({ from, to, left = null }) {
-      console.log({ from, to, left }, Object.keys(this.scene), this.scene[to]);
       const targetNode = this.scene[to];
       if (!targetNode) {
         this.reject(from);
@@ -279,6 +278,9 @@ export default {
       const id = event.dataTransfer.getData('id');
       try {
         const node = this.scene[id];
+        if (!node) {
+          throw new Error('Not scene item');
+        }
         if (node.fork && (node.left || node.right)) {
           throw new Error("Can't remove fork node with children");
         }
@@ -286,7 +288,9 @@ export default {
         this.updateScene(updated);
       } catch (e) {
         console.error(e);
-        return this.reject(id);
+        this.reject('trash');
+        this.reject(id);
+        return;
       }
     },
     reject(id) {

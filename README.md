@@ -4,11 +4,11 @@ Todo
 
 - [x] Tree nodes with 'fork' attribute to improve algroritms
 - [ ] Remove classes from node drawing components to global style
-- [ ] Rename components 'card' => 'node'
-- [ ] Draw 'yes' and 'no' on arrows
+- [x] Rename components 'card' => 'node'
+- [x] Draw 'yes' and 'no' on arrows
 - [ ] Generalize color classes on global css
-- [ ] Trash as regular node object
-- [ ] Save/load local storage
+- [x] Trash as regular node object
+- [x] Save/load local storage
 - [ ] Zoom control
 - [ ] Node editing sidebar
 - [x] Better space on canvas (need margins on bottom/right)

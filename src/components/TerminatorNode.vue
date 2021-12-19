@@ -1,8 +1,8 @@
 <template>
   <div
-    class="end-card"
+    class="end-node"
     :class="{ 'drag-over': dragOver, rejected }"
-    :style="cardStyle"
+    :style="nodeStyle"
   >
     <div
       class="dropzone"
@@ -16,11 +16,11 @@
   </div>
 </template>
 <script>
-import ActionCard from './ActionCard.vue';
+import BaseNode from './BaseNode.vue';
 import plus from '../assets/icons/plus.svg';
 
 export default {
-  extends: ActionCard,
+  extends: BaseNode,
   computed: {
     plus() {
       return plus;
@@ -28,7 +28,7 @@ export default {
     size() {
       return this.height;
     },
-    cardStyle() {
+    nodeStyle() {
       if (this.absolute) {
         return {
           position: 'absolute',
@@ -52,7 +52,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.end-card {
+.end-node {
   display: flex;
   border: 1px solid blue;
   background-color: #fff;

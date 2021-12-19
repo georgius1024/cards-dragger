@@ -1,8 +1,8 @@
 <template>
   <div
-    class="card"
+    class="node"
     :class="{ 'drag-over': dragOver, rejected }"
-    :style="cardStyle"
+    :style="nodeStyle"
     draggable="true"
     @dragstart="startDrag"
     @dragend="dragEnd"
@@ -110,7 +110,7 @@ export default {
         account
       };
     },
-    cardStyle() {
+    nodeStyle() {
       if (this.absolute) {
         return {
           position: 'absolute',
@@ -186,7 +186,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.card {
+.node {
   display: flex;
   border: 1px solid blue;
   background-color: #fff;

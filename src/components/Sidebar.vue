@@ -1,14 +1,15 @@
 <template>
   <div class="sidebar">
     <div v-for="card in samples" class="container" :key="card.type">
-      <ActionCard
+      <BaseNode
         :rejected="Boolean(rejected[card.id])"
         :id="card.id"
         :type="card.type"
       />
     </div>
     <div class="separator"></div>
-    <div
+    <Trash :rejected="rejected['trash']" @drop="onDelete" />
+    <!-- <div
       class="trash"
       :class="{ rejected: rejected['trash'] }"
       @drop="onDelete"
@@ -21,14 +22,16 @@
           d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
         />
       </svg>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
-import ActionCard from './ActionCard.vue';
+import BaseNode from './BaseNode.vue';
+import Trash from './Trash.vue';
 export default {
   components: {
-    ActionCard
+    BaseNode,
+    Trash
   },
   props: {
     samples: {

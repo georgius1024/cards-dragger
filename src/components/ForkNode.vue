@@ -1,8 +1,8 @@
 <template>
   <div
-    class="fork-card"
+    class="fork-node"
     :class="{ 'drag-over': dragOver, rejected }"
-    :style="cardStyle"
+    :style="nodeStyle"
     draggable="true"
     @dragstart="startDrag"
     @dragend="dragEnd"
@@ -52,11 +52,11 @@
   </template>
 </template>
 <script>
-import ActionCard from './ActionCard.vue';
+import BaseNode from './BaseNode.vue';
 import SideConnector from './SideConnector.vue';
 
 export default {
-  extends: ActionCard,
+  extends: BaseNode,
   components: {
     SideConnector
   },
@@ -97,7 +97,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.fork-card {
+.fork-node {
   display: flex;
   border: 1px solid blue;
   background-color: #fff;
