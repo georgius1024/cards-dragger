@@ -66,10 +66,37 @@
       fill="white"
       stroke-width="2"
     />
-    <text :x="textPoint.x" :y="textPoint.y" dx="-20" class="small">
+    <!-- <text
+      dominant-baseline="middle"
+      text-anchor="middle"
+      :x="textPoint.x"
+      :y="textPoint.y"
+      class="small"
+    >
       {{ text }}
-    </text>
+    </text> -->
   </svg>
+  <div
+    style="
+      position: absolute;
+      padding: 8px;
+      height: 32px;
+      background-color: #fff;
+      z-index: 11;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: blue;
+      width: 64px;
+    "
+    :style="{
+      left: `${this.left + textPoint.x - 32}px`,
+      top: `${this.top + textPoint.y - 16}px`
+    }"
+  >
+    {{ text }}
+  </div>
 </template>
 <script>
 export default {
@@ -115,11 +142,12 @@ export default {
       };
     },
     textPoint() {
+      const dx = (this.width - this.radius) / 2;
       return {
         x:
           this.fromX < this.toX
-            ? this.padding + 30
-            : this.width - this.padding - 30,
+            ? this.padding + dx
+            : this.width - this.padding - dx,
         y: this.fromY < this.toY ? this.padding : this.height - this.padding
       };
     },

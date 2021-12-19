@@ -31,7 +31,7 @@ import ActionCard from './ActionCard.vue';
 import ForkCard from './ForkCard.vue';
 import TerminatorNode from './TerminatorNode.vue';
 
-const GRID_STEP_X = 200;
+const GRID_STEP_X = 100;
 const GRID_STEP_Y = 120;
 const GRID_OFFSET_X = 120;
 const GRID_OFFSET_Y = 100;
@@ -137,5 +137,7 @@ export default {
   flex-grow: 1;
   position: relative;
   overflow: auto;
+  max-width: calc(100vw - 200px);
+  max-height: calc(100vh - 64px);
 }
 </style>

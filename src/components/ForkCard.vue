@@ -21,8 +21,8 @@
   <template v-if="bothChildren">
     <SideConnector
       v-if="leftConnection"
-      :fromX="leftConnectionPoint.x"
-      :fromY="leftConnectionPoint.y"
+      :fromX="centralConnectionPoint.x"
+      :fromY="centralConnectionPoint.y"
       :toX="leftConnection.x"
       :toY="leftConnection.y"
       text="Yes"
@@ -31,8 +31,8 @@
     />
     <SideConnector
       v-if="rightConnection"
-      :fromX="rightConnectionPoint.x"
-      :fromY="rightConnectionPoint.y"
+      :fromX="centralConnectionPoint.x"
+      :fromY="centralConnectionPoint.y"
       :toX="rightConnection.x"
       :toY="rightConnection.y"
       text="No"
