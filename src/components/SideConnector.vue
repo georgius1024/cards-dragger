@@ -12,7 +12,7 @@
       :y1="startingPoint.y"
       :x2="firstJunction.x"
       :y2="firstJunction.y"
-      :stroke="black"
+      stroke="#0093ff"
       :stroke-width="stroke"
     />
 
@@ -21,7 +21,7 @@
       :y1="firstJunction.y"
       :x2="secondJunction.x"
       :y2="secondJunction.y"
-      :stroke="black"
+      stroke="#0093ff"
       :stroke-width="stroke"
       stroke-linecap="round"
     />
@@ -35,9 +35,8 @@
         ${thirdJunction.x} ${thirdJunction.y}  
         ${thirdJunction.x} ${thirdJunction.y}
       `"
-      :stroke="black"
+      stroke="#0093ff"
       :stroke-width="stroke"
-      fill="transparent"
       stroke-linecap="round"
     />
 
@@ -46,7 +45,7 @@
       :y1="thirdJunction.y"
       :x2="endingPoint.x"
       :y2="endingPoint.y"
-      :stroke="black"
+      stroke="#0093ff "
       :stroke-width="stroke"
       stroke-linecap="round"
       marker-end="url(#triangle)"
@@ -60,7 +59,7 @@
       markerUnits="strokeWidth"
       markerHeight="4"
       orient="auto"
-      :fill="black"
+      fill="#0093ff"
     >
       <path d="M 0 0 L 10 5 L 0 10 z" />
     </marker>
@@ -69,7 +68,7 @@
       :cx="x1"
       :cy="y1"
       :r="stroke"
-      :stroke="black"
+      stroke="#0093ff"
       fill="white"
       stroke-width="2"
     />
@@ -78,13 +77,13 @@
       :cx="x2"
       :cy="y2"
       :r="stroke"
-      :stroke="black"
+      stroke="#0093ff"
       fill="white"
       stroke-width="2"
     />
   </svg>
   <div
-    class="tag"
+    class="tag primary-text"
     :style="{
       left: `${this.left + textPoint.x - 32}px`,
       top: `${this.top + textPoint.y - 16}px`
@@ -173,9 +172,6 @@ export default {
         y: this.startingPoint.y + this.height / 2 - this.padding + +this.radius
       };
     },
-    black() {
-      return 'blue';
-    },
     style() {
       return {
         position: 'absolute',
@@ -198,8 +194,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: blue;
   width: 64px;
+  text-transform: uppercase;
 }
 .connector {
   transition: all 200ms ease;

@@ -2,7 +2,7 @@
   <header>
     <h1>Cards</h1>
     <div class="separator" />
-    <button @click="$emit('erase')">
+    <button class="primary-border primary-text" @click="$emit('erase')">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -10,7 +10,11 @@
         />
       </svg>
     </button>
-    <button @click="undo" :disabled="!undoable">
+    <button
+      class="primary-border primary-text"
+      @click="undo"
+      :disabled="!undoable"
+    >
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -18,7 +22,11 @@
         />
       </svg>
     </button>
-    <button @click="redo" :disabled="!redoable">
+    <button
+      class="primary-border primary-text"
+      @click="redo"
+      :disabled="!redoable"
+    >
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -26,7 +34,11 @@
         />
       </svg>
     </button>
-    <button @click="zoomIn">
+    <button
+      class="primary-border primary-text"
+      :disabled="!zoomableIn"
+      @click="zoomIn"
+    >
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -34,7 +46,11 @@
         />
       </svg>
     </button>
-    <button @click="zoomOut">
+    <button
+      class="primary-border primary-text"
+      :disabled="!zoomableOut"
+      @click="zoomOut"
+    >
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -51,6 +67,12 @@ export default {
       type: Boolean
     },
     redoable: {
+      type: Boolean
+    },
+    zoomableIn: {
+      type: Boolean
+    },
+    zoomableOut: {
       type: Boolean
     }
   },
@@ -91,8 +113,6 @@ header {
     width: 32px;
     height: 32px;
     margin: 16px;
-    color: blue;
-    border: 1px solid blue;
     cursor: pointer;
     &:disabled {
       background-color: #ccf7;

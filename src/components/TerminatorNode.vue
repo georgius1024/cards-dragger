@@ -1,6 +1,6 @@
 <template>
   <div
-    class="end-node"
+    class="generic-node end-node"
     :class="{ 'drag-over': dragOver, rejected }"
     :style="nodeStyle"
   >
@@ -26,7 +26,7 @@ export default {
       return plus;
     },
     size() {
-      return this.height;
+      return this.height / 2;
     },
     nodeStyle() {
       if (this.absolute) {
@@ -53,29 +53,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .end-node {
-  display: flex;
-  border: 1px solid blue;
-  background-color: #fff;
   border-radius: 100%;
   padding: 4px;
-  user-select: none;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
-  transition: all 200ms ease;
-  transform-origin: center;
-  &:hover {
-    transform: translate(0, -2px);
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.32);
-  }
-  .dropzone {
-    position: absolute;
-    inset: -50px;
-    transition: all 200ms ease;
-  }
-  &.drag-over {
-    transform: scale(1.5);
-    opacity: 0.5;
-  }
 }
 </style>

@@ -12,7 +12,7 @@
       :y1="y1"
       :x2="x2"
       :y2="y2"
-      :stroke="black"
+      stroke="#0093ff"
       :stroke-width="stroke"
       marker-end="url(#triangle)"
     />
@@ -20,7 +20,7 @@
       :cx="x1"
       :cy="y1"
       :r="stroke"
-      :stroke="black"
+      stroke="#0093ff"
       fill="white"
       stroke-width="2"
     />
@@ -32,14 +32,16 @@
       markerUnits="strokeWidth"
       markerHeight="4"
       orient="auto"
+      stroke="#0093ff"
+      fill="#0093ff"
     >
-      <path d="M 0 0 L 10 5 L 0 10 z" :fill="black" />
+      <path d="M 0 0 L 10 5 L 0 10 z" />
     </marker>
     <circle
       :cx="x2"
       :cy="y2"
       :r="stroke"
-      :stroke="black"
+      stroke="#0093ff"
       fill="white"
       stroke-width="2"
     />
@@ -78,9 +80,6 @@ export default {
     },
     y2() {
       return this.fromY < this.toY ? this.height - this.padding : this.padding;
-    },
-    black() {
-      return 'blue';
     },
     style() {
       return {

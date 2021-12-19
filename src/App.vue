@@ -7,6 +7,8 @@
       <Header
         :undoable="undoable"
         :redoable="redoable"
+        :zoomableIn="zoom < 1"
+        :zoomableOut="zoom > 0.3"
         @undo="undo"
         @redo="redo"
         @erase="erase"
