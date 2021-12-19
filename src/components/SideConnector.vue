@@ -84,19 +84,7 @@
     />
   </svg>
   <div
-    style="
-      position: absolute;
-      padding: 8px;
-      height: 32px;
-      background-color: #fff;
-      z-index: 11;
-      border-radius: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: blue;
-      width: 64px;
-    "
+    class="tag"
     :style="{
       left: `${this.left + textPoint.x - 32}px`,
       top: `${this.top + textPoint.y - 16}px`
@@ -200,15 +188,20 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.tag {
+  position: absolute;
+  padding: 8px;
+  height: 32px;
+  background-color: #fff;
+  z-index: 11;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: blue;
+  width: 64px;
+}
 .connector {
   transition: all 200ms ease;
-  .small {
-    position: absolute;
-    padding: 8px;
-    border: 1px solid blue;
-    background-color: white;
-    width: 120px;
-    text-align: right;
-  }
 }
 </style>
