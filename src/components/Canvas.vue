@@ -1,6 +1,12 @@
 <template>
   <div class="canvas-outer">
-    <div class="canvas-inner" ref="canvas" @dragover.prevent @dragenter.prevent>
+    <div
+      class="canvas-inner"
+      :style="canvasStyle"
+      ref="canvas"
+      @dragover.prevent
+      @dragenter.prevent
+    >
       <component
         v-for="item in tree"
         :is="getComponent(item)"
@@ -45,6 +51,10 @@ export default {
     rejected: {
       type: Object,
       required: true
+    },
+    zoom: {
+      type: Number,
+      default: 1
     }
   },
   computed: {
@@ -86,8 +96,7 @@ export default {
     },
     canvasStyle() {
       return {
-        width: `${this.sceneMaxWidth}px`,
-        height: `${this.sceneMaxHeight}px`
+        transform: `scale(${this.zoom})`
       };
     }
   },
@@ -131,5 +140,6 @@ export default {
 .canvas-inner {
   position: relative;
   margin: 64px;
+  transform-origin: top left;
 }
 </style>

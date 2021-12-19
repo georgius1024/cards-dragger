@@ -9,8 +9,7 @@ Todo
 - [ ] Generalize color classes on global css
 - [x] Trash as regular node object
 - [x] Save/load local storage
-- [ ] Zoom control
+- [x] Zoom control
 - [ ] Node editing sidebar
 - [x] Better space on canvas (need margins on bottom/right)
-- [ ] Stylize scrollbars for canvas
 - [ ] Stylize node display, add texts

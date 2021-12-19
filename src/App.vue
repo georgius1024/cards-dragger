@@ -10,11 +10,14 @@
         @undo="undo"
         @redo="redo"
         @erase="erase"
+        @zoomIn="zoomIn"
+        @zoomOut="zoomOut"
       />
     </template>
     <Canvas
       :scene="widerScene"
       :rejected="rejected"
+      :zoom="zoom"
       @update="updateScene"
       @dropNode="dropNode"
       @drop="dropOff"
@@ -48,7 +51,8 @@ export default {
   data() {
     return {
       history: null,
-      rejected: {}
+      rejected: {},
+      zoom: 1
     };
   },
   computed: {
@@ -206,6 +210,12 @@ export default {
     },
     erase() {
       this.history = initialize(treeUtils.load(this.initialScene));
+    },
+    zoomIn() {
+      this.zoom = Math.min(this.zoom + 0.1, 1);
+    },
+    zoomOut() {
+      this.zoom = Math.max(this.zoom - 0.1, 0.3);
     },
     dropNode({ from, to, left = null }) {
       const targetNode = this.scene[to];
