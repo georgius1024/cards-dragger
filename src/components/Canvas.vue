@@ -1,29 +1,25 @@
 <template>
-  <main
-    class="canvas"
-    ref="canvas"
-    :style="canvasStyle"
-    @dragover.prevent
-    @dragenter.prevent
-  >
-    <component
-      v-for="item in tree"
-      :is="getComponent(item)"
-      :key="item.id"
-      :parent="item.parent"
-      :id="item.id"
-      :x="gridToCanvasX(item.x)"
-      :y="gridToCanvasY(item.y)"
-      :absolute="true"
-      :rejected="Boolean(rejected[item.id])"
-      :width="nodeWidth"
-      :height="nodeHeight"
-      :type="item.type"
-      :leftConnection="connectionPoint(item.left)"
-      :rightConnection="connectionPoint(item.right)"
-      @dropOn="$emit('dropNode', $event)"
-    />
-  </main>
+  <div class="canvas-outer">
+    <div class="canvas-inner" ref="canvas" @dragover.prevent @dragenter.prevent>
+      <component
+        v-for="item in tree"
+        :is="getComponent(item)"
+        :key="item.id"
+        :parent="item.parent"
+        :id="item.id"
+        :x="gridToCanvasX(item.x)"
+        :y="gridToCanvasY(item.y)"
+        :absolute="true"
+        :rejected="Boolean(rejected[item.id])"
+        :width="nodeWidth"
+        :height="nodeHeight"
+        :type="item.type"
+        :leftConnection="connectionPoint(item.left)"
+        :rightConnection="connectionPoint(item.right)"
+        @dropOn="$emit('dropNode', $event)"
+      />
+    </div>
+  </div>
 </template>
 <script>
 import ReingoldTilford from '../utils/ReingoldTilford';
@@ -33,8 +29,6 @@ import TerminatorNode from './TerminatorNode.vue';
 
 const GRID_STEP_X = 320;
 const GRID_STEP_Y = 180;
-const GRID_OFFSET_X = 120;
-const GRID_OFFSET_Y = 100;
 const NODE_WIDTH = 300;
 const NODE_HEIGHT = 100;
 export default {
@@ -65,12 +59,6 @@ export default {
     },
     nodeHeight() {
       return NODE_HEIGHT;
-    },
-    sceneOffsetX() {
-      return GRID_OFFSET_X;
-    },
-    sceneOffsetY() {
-      return GRID_OFFSET_Y;
     },
     sceneStepX() {
       return GRID_STEP_X;
@@ -105,17 +93,17 @@ export default {
   },
   methods: {
     gridToCanvasX(col) {
-      return col * this.sceneStepX + this.sceneOffsetX - this.nodeWidth / 2;
+      return col * this.sceneStepX;
     },
     gridToCanvasY(row) {
-      return row * this.sceneStepY + this.sceneOffsetY - this.nodeHeight / 2;
+      return row * this.sceneStepY;
     },
     connectionPoint(id) {
       const node = this.tree[id];
       if (node) {
         return {
-          x: node.x * this.sceneStepX + this.sceneOffsetX,
-          y: node.y * this.sceneStepY + this.sceneOffsetY - this.nodeHeight / 2
+          x: node.x * this.sceneStepX + this.nodeWidth / 2,
+          y: node.y * this.sceneStepY
         };
       }
     },
@@ -132,12 +120,16 @@ export default {
 };
 </script>
 <style lang="scss">
-.canvas {
+.canvas-outer {
   background-color: #eee;
   flex-grow: 1;
-  position: relative;
+  display: flex;
   overflow: auto;
   max-width: calc(100vw - 200px);
   max-height: calc(100vh - 64px);
+}
+.canvas-inner {
+  position: relative;
+  margin: 64px;
 }
 </style>
