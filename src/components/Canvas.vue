@@ -31,12 +31,12 @@ import ActionCard from './ActionCard.vue';
 import ForkCard from './ForkCard.vue';
 import TerminatorNode from './TerminatorNode.vue';
 
-const GRID_STEP_X = 100;
-const GRID_STEP_Y = 120;
+const GRID_STEP_X = 320;
+const GRID_STEP_Y = 180;
 const GRID_OFFSET_X = 120;
 const GRID_OFFSET_Y = 100;
-const NODE_WIDTH = 180;
-const NODE_HEIGHT = 60;
+const NODE_WIDTH = 300;
+const NODE_HEIGHT = 100;
 export default {
   components: {
     ActionCard,

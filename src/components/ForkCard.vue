@@ -27,7 +27,7 @@
       :toY="leftConnection.y"
       text="Yes"
       stroke="4"
-      radius="24"
+      radius="6"
     />
     <SideConnector
       v-if="rightConnection"
@@ -37,7 +37,7 @@
       :toY="rightConnection.y"
       text="No"
       stroke="4"
-      radius="24"
+      radius="6"
     />
   </template>
   <template v-else-if="singleChild">

@@ -15,21 +15,35 @@
       :stroke="black"
       :stroke-width="stroke"
     />
+
+    <line
+      :x1="firstJunction.x"
+      :y1="firstJunction.y"
+      :x2="secondJunction.x"
+      :y2="secondJunction.y"
+      :stroke="black"
+      :stroke-width="stroke"
+      stroke-linecap="round"
+    />
+
     <path
       :d="`
-      M ${firstJunction.x} ${firstJunction.y} 
-      C ${firstJunction.x + (isRight ? +radius : -radius)} ${firstJunction.y}  
-        ${secondJunction.x} ${secondJunction.y}  
-        ${secondJunction.x} ${secondJunction.y}
+      M ${secondJunction.x} ${secondJunction.y} 
+      C ${secondJunction.x + (isRight ? +radius : -radius)} ${
+        secondJunction.y
+      }  
+        ${thirdJunction.x} ${thirdJunction.y}  
+        ${thirdJunction.x} ${thirdJunction.y}
       `"
       :stroke="black"
       :stroke-width="stroke"
       fill="transparent"
       stroke-linecap="round"
     />
+
     <line
-      :x1="secondJunction.x"
-      :y1="secondJunction.y"
+      :x1="thirdJunction.x"
+      :y1="thirdJunction.y"
       :x2="endingPoint.x"
       :y2="endingPoint.y"
       :stroke="black"
@@ -50,6 +64,7 @@
     >
       <path d="M 0 0 L 10 5 L 0 10 z" />
     </marker>
+
     <circle
       :cx="x1"
       :cy="y1"
@@ -58,6 +73,7 @@
       fill="white"
       stroke-width="2"
     />
+
     <circle
       :cx="x2"
       :cy="y2"
@@ -66,15 +82,6 @@
       fill="white"
       stroke-width="2"
     />
-    <!-- <text
-      dominant-baseline="middle"
-      text-anchor="middle"
-      :x="textPoint.x"
-      :y="textPoint.y"
-      class="small"
-    >
-      {{ text }}
-    </text> -->
   </svg>
   <div
     style="
@@ -148,7 +155,7 @@ export default {
           this.fromX < this.toX
             ? this.padding + dx
             : this.width - this.padding - dx,
-        y: this.fromY < this.toY ? this.padding : this.height - this.padding
+        y: this.startingPoint.y + this.height / 2 - this.padding
       };
     },
     endingPoint() {
@@ -159,14 +166,23 @@ export default {
     },
     firstJunction() {
       return {
-        x: this.endingPoint.x + (this.isRight ? -this.radius : +this.radius),
-        y: this.startingPoint.y
+        x: this.startingPoint.x,
+        y: this.startingPoint.y + this.height / 2 - this.padding
       };
     },
     secondJunction() {
       return {
+        x:
+          this.fromX < this.toX
+            ? this.endingPoint.x - this.padding
+            : this.endingPoint.x + this.padding,
+        y: this.startingPoint.y + this.height / 2 - this.padding
+      };
+    },
+    thirdJunction() {
+      return {
         x: this.endingPoint.x,
-        y: this.startingPoint.y + +this.radius
+        y: this.startingPoint.y + this.height / 2 - this.padding + +this.radius
       };
     },
     black() {
