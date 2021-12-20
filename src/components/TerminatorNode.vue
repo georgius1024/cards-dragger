@@ -2,7 +2,7 @@
   <div
     class="generic-node end-node"
     :class="{ 'drag-over': dragOver, rejected }"
-    :style="nodeStyle"
+    :style="terminatorStyle"
     @click.stop="click"
     @mousedown.stop
   >
@@ -30,7 +30,7 @@ export default {
     size() {
       return this.height / 2;
     },
-    nodeStyle() {
+    terminatorStyle() {
       if (this.absolute) {
         return {
           position: 'absolute',
