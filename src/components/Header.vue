@@ -2,6 +2,7 @@
   <header>
     <h1>Cards</h1>
     <div class="separator" />
+    <label>Erase</label>
     <button class="primary-border primary-text" @click="$emit('erase')">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
@@ -10,6 +11,7 @@
         />
       </svg>
     </button>
+    <label>Undo/redo</label>
     <button
       class="primary-border primary-text"
       @click="undo"
@@ -34,6 +36,7 @@
         />
       </svg>
     </button>
+    <label>Zoom</label>
     <button
       class="primary-border primary-text"
       :disabled="!zoomableIn"
@@ -115,9 +118,11 @@ header {
     margin: 16px;
     cursor: pointer;
     &:disabled {
-      background-color: #ccf7;
-      color: #33f7;
+      color: #33f3;
     }
+  }
+  button + button {
+    margin-left: 0px;
   }
 }
 </style>
