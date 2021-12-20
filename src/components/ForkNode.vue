@@ -10,6 +10,8 @@
     @dragenter.prevent="dragenter"
     @dragleave.prevent="dragleave"
     @drop.stop="drop"
+    @click.stop="click"
+    @mousedown.stop
   >
     <div class="icon">
       <img :src="icons[type]" />

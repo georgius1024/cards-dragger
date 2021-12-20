@@ -10,6 +10,8 @@
     @dragenter.prevent="dragenter"
     @dragleave.prevent="dragleave"
     @drop.stop="drop"
+    @click.stop="click"
+    @mousedown.stop
   >
     <div class="icon">
       <img :src="icons[type]" />
@@ -97,7 +99,7 @@ export default {
       dragOver: false
     };
   },
-  emits: ['dropOn', 'dragStart'],
+  emits: ['dropOn', 'dragStart', 'click'],
   computed: {
     icons() {
       return {
@@ -181,6 +183,9 @@ export default {
       const from = event.dataTransfer.getData('id');
       const to = this.id;
       this.$emit('dropOn', { from, to });
+    },
+    click() {
+      this.$emit('click', this.id);
     }
   }
 };

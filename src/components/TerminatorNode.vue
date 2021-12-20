@@ -3,6 +3,8 @@
     class="generic-node end-node"
     :class="{ 'drag-over': dragOver, rejected }"
     :style="nodeStyle"
+    @click.stop="click"
+    @mousedown.stop
   >
     <div
       class="dropzone"

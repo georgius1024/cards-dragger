@@ -14,7 +14,7 @@
 <style lang="scss" scoped>
 .layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 300px 1fr;
   grid-template-rows: 64px 1fr;
   grid-template-areas: 'header header' 'sidebar main';
   width: 100vw;

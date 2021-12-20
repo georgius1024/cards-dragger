@@ -1,5 +1,15 @@
 <template>
-  <div class="canvas-outer">
+  <div
+    class="canvas-outer"
+    ref="scroller"
+    :class="{ dragging: Boolean(dragging) }"
+    @mousedown.stop="mouseStartScroll"
+    @mouseover.stop="mouseStartScroll"
+    @mouseup.stop="mouseStopScroll"
+    @mouseout.stop="mouseStopScroll"
+    @mousemove.stop="mouseScroll"
+    @wheel.stop.prevent="mouseZoom"
+  >
     <div
       class="canvas-inner"
       :style="canvasStyle"
@@ -23,6 +33,7 @@
         :leftConnection="connectionPoint(item.left)"
         :rightConnection="connectionPoint(item.right)"
         @dropOn="$emit('dropNode', $event)"
+        @click="nodeClick(item.id)"
       />
     </div>
   </div>
@@ -56,6 +67,11 @@ export default {
       type: Number,
       default: 1
     }
+  },
+  data() {
+    return {
+      dragging: null
+    };
   },
   computed: {
     root() {
@@ -96,6 +112,8 @@ export default {
     },
     canvasStyle() {
       return {
+        minWidth: `${this.sceneMaxWidth * this.zoom}px`,
+        minHeight: `${this.sceneMaxHeight * this.zoom}px`,
         transform: `scale(${this.zoom})`
       };
     }
@@ -124,6 +142,39 @@ export default {
         return TerminatorNode;
       }
       return BaseNode;
+    },
+    nodeClick(id) {
+      console.log(this.tree[id]);
+    },
+    mouseStartScroll(event) {
+      if (event.buttons === 1) {
+        this.dragging = {
+          x: event.pageX,
+          y: event.pageY,
+          initialScrollLeft: this.$refs.scroller.scrollLeft,
+          initialScrollTop: this.$refs.scroller.scrollTop
+        };
+      }
+    },
+    mouseStopScroll() {
+      this.dragging = null;
+    },
+    mouseScroll(event) {
+      if (this.dragging && event.buttons === 1) {
+        const deltaX = this.dragging.x - event.pageX;
+        const deltaY = this.dragging.y - event.pageY;
+        this.$refs.scroller.scrollLeft =
+          this.dragging.initialScrollLeft + deltaX;
+        this.$refs.scroller.scrollTop = this.dragging.initialScrollTop + deltaY;
+      }
+    },
+    mouseZoom(event) {
+      if (event.deltaY < 0) {
+        this.$emit('zoomIn');
+      }
+      if (event.deltaY > 0) {
+        this.$emit('zoomOut');
+      }
     }
   }
 };
@@ -134,8 +185,12 @@ export default {
   flex-grow: 1;
   display: flex;
   overflow: auto;
-  max-width: calc(100vw - 200px);
+  max-width: calc(100vw - 300px);
   max-height: calc(100vh - 64px);
+  cursor: default;
+  &.dragging {
+    cursor: move;
+  }
 }
 .canvas-inner {
   position: relative;

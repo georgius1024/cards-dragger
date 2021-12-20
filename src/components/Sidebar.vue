@@ -1,28 +1,25 @@
 <template>
   <div class="sidebar">
-    <div v-for="card in samples" class="container" :key="card.type">
+    <b>Drag and drop cards</b>
+    <div v-for="node in nodes" class="container" :key="node.type">
       <BaseNode
-        :rejected="Boolean(rejected[card.id])"
-        :id="card.id"
-        :type="card.type"
+        :rejected="Boolean(rejected[node.id])"
+        :id="node.id"
+        :type="node.type"
       />
+    </div>
+    <br />
+    <b>Or select premade series</b>
+    <div
+      v-for="sample in samples"
+      class="generic-node sample"
+      :key="sample.id"
+      @click="$emit('select', sample.id)"
+    >
+      {{ sample.name }}
     </div>
     <div class="separator"></div>
     <Trash :rejected="rejected['trash']" @drop="onDelete" />
-    <!-- <div
-      class="trash"
-      :class="{ rejected: rejected['trash'] }"
-      @drop="onDelete"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <svg style="width: 96px; height: 96px" viewBox="0 0 24 24">
-        <path
-          fill="currentColor"
-          d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-        />
-      </svg>
-    </div> -->
   </div>
 </template>
 <script>
@@ -34,12 +31,16 @@ export default {
     Trash
   },
   props: {
-    samples: {
+    nodes: {
       type: Array,
       required: true
     },
     rejected: {
       type: Object,
+      required: true
+    },
+    samples: {
+      type: Array,
       required: true
     }
   },
@@ -60,6 +61,12 @@ export default {
   user-select: none;
   * > * {
     margin-top: 6px;
+  }
+  .sample {
+    padding: 12px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .separator {
     flex-grow: 1;

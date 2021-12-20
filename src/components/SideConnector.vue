@@ -196,6 +196,7 @@ export default {
   justify-content: center;
   width: 64px;
   text-transform: uppercase;
+  user-select: none;
 }
 .connector {
   transition: all 200ms ease;
