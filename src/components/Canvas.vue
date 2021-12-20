@@ -3,12 +3,12 @@
     class="canvas-outer"
     ref="scroller"
     :class="{ dragging: Boolean(dragging) }"
-    @mousedown.stop="mouseStartScroll"
-    @mouseover.stop="mouseStartScroll"
-    @mouseup.stop="mouseStopScroll"
-    @mouseout.stop="mouseStopScroll"
-    @mousemove.stop="mouseScroll"
-    @wheel.stop.prevent="mouseZoom"
+    @mousedown="mouseStartScroll"
+    @mouseover="mouseStartScroll"
+    @mouseup="mouseStopScroll"
+    @mouseout="mouseStopScroll"
+    @mousemove="mouseScroll"
+    @wheel1="mouseZoom"
     @click.stop="nodeClick(null)"
   >
     <div
@@ -223,6 +223,7 @@ export default {
   cursor: default;
   &.dragging {
     cursor: move;
+    cursor: dragging;
   }
 }
 .canvas-inner {
