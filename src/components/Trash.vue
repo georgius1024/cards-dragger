@@ -83,7 +83,7 @@ export default {
     margin: 4px;
   }
   &.drag-over {
-    transform: scale(1.5);
+    transform: scale(1.2);
     opacity: 0.5;
   }
 }
