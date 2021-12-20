@@ -117,17 +117,22 @@ export default {
         minHeight: `${this.sceneMaxHeight * this.zoom}px`,
         transform: `scale(${this.zoom})`
       };
-    },
-    touchDevice() {
-      return 'ontouchstart' in window;
     }
   },
   watch: {
     zoom(newZoom, oldZoom) {
       if (newZoom !== oldZoom) {
         const { width, height } = this.$refs.scroller.getBoundingClientRect();
-        this.$refs.scroller.scrollLeft += (newZoom - oldZoom) * width;
-        this.$refs.scroller.scrollTop += (newZoom - oldZoom) * height;
+        const { scrollLeft, scrollTop } = this.$refs.scroller;
+        const scaling = newZoom / oldZoom;
+        const centerX = scrollLeft + width / 2;
+        const centerY = scrollTop + height / 2;
+        const newCenterX = centerX * scaling;
+        const newCenterY = centerY * scaling;
+        const newScrollLeft = newCenterX - width / 2;
+        const newScrollTop = newCenterY - height / 2;
+        this.$refs.scroller.scrollLeft = newScrollLeft;
+        this.$refs.scroller.scrollTop = newScrollTop;
       }
     },
     scene(newScene, oldScene) {
@@ -207,6 +212,7 @@ export default {
         if (event.deltaY > 0) {
           this.$emit('zoomOut');
         }
+        event.preventDefault();
       }
     }
   }
