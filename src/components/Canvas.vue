@@ -178,7 +178,7 @@ export default {
       this.$emit('select', id);
     },
     mouseStartScroll(event) {
-      if (this.touchDevice) {
+      if (this.touchDevice || true) {
         return;
       }
       if (event.buttons === 1) {
