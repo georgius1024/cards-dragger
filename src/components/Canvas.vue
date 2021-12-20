@@ -126,6 +126,24 @@ export default {
         this.$refs.scroller.scrollLeft += (newZoom - oldZoom) * width;
         this.$refs.scroller.scrollTop += (newZoom - oldZoom) * height;
       }
+    },
+    scene(newScene, oldScene) {
+      const { id: oldRoot = null } = Object.values(oldScene).find(
+        (e) => !e.parent
+      );
+      const { id: newRoot = null } = Object.values(newScene).find(
+        (e) => !e.parent
+      );
+      console.log(oldRoot, newRoot);
+      if (oldRoot !== newRoot) {
+        this.$nextTick(() => {
+          const rootNode = this.tree[newRoot];
+          const x = this.gridToCanvasX(rootNode.x);
+          const { width } = this.$refs.scroller.getBoundingClientRect();
+          this.$refs.scroller.scrollTop = 0;
+          this.$refs.scroller.scrollLeft = x - width / 2 + this.nodeWidth / 2; // (x + this.nodeWidth - width) / 2;
+        });
+      }
     }
   },
   methods: {
