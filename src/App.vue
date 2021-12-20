@@ -8,6 +8,7 @@
         :selected="selectedNode"
         @delete="deleteNode"
         @select="loadSample"
+        @add="addNode"
       />
     </template>
     <template v-slot:header>
@@ -263,6 +264,12 @@ export default {
       const from = event.dataTransfer.getData('id');
       this.reject(from);
     },
+    addNode(id) {
+      const pickerItem = this.availableTypes.find((e) => e.id === id);
+      if (pickerItem) {
+        return this.attachNewNode(pickerItem, this.selectedNode);
+      }
+    },
     attachNewNode(picked, targetNode, left = null) {
       const nodeToInsert = {
         ...picked,
@@ -308,8 +315,7 @@ export default {
         this.reject(sourceNode.id);
       }
     },
-    deleteNode(event) {
-      const id = event.dataTransfer.getData('id');
+    deleteNode(id) {
       try {
         const node = this.scene[id];
         if (!node) {
@@ -320,6 +326,7 @@ export default {
         }
         const updated = treeUtils.removeNode(this.scene, id);
         this.updateScene(updated);
+        this.selectedNode = null;
       } catch (e) {
         console.error(e);
         this.reject('trash');

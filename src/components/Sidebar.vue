@@ -1,9 +1,12 @@
 <template>
   <div class="sidebar">
     <template v-if="selected">
-      <BaseNode :id="selected.id" :draggable="false" :type="selected.type" />
-
-      {{ selected }}
+      <BlockViewer
+        :node="selected"
+        :nodes="nodes"
+        @delete="$emit('delete', $event)"
+        @add="$emit('add', $event)"
+      />
     </template>
     <template v-else>
       <b>Drag and drop cards</b>
@@ -31,11 +34,13 @@
 </template>
 <script>
 import BaseNode from './BaseNode.vue';
+import BlockViewer from './BlockViewer.vue';
 import Trash from './Trash.vue';
 export default {
   components: {
     BaseNode,
-    Trash
+    Trash,
+    BlockViewer
   },
   props: {
     nodes: {
@@ -56,7 +61,8 @@ export default {
   },
   methods: {
     onDelete(event) {
-      this.$emit('delete', event);
+      const id = event.dataTransfer.getData('id');
+      this.$emit('delete', id);
     }
   }
 };
