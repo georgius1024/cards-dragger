@@ -9,6 +9,7 @@
     @mouseout.stop="mouseStopScroll"
     @mousemove.stop="mouseScroll"
     @wheel.stop.prevent="mouseZoom"
+    @click.stop="nodeClick(null)"
   >
     <div
       class="canvas-inner"
@@ -144,7 +145,7 @@ export default {
       return BaseNode;
     },
     nodeClick(id) {
-      console.log(this.tree[id]);
+      this.$emit('select', id);
     },
     mouseStartScroll(event) {
       if (event.buttons === 1) {
@@ -169,11 +170,13 @@ export default {
       }
     },
     mouseZoom(event) {
-      if (event.deltaY < 0) {
-        this.$emit('zoomIn');
-      }
-      if (event.deltaY > 0) {
-        this.$emit('zoomOut');
+      if (event.ctrlKey) {
+        if (event.deltaY < 0) {
+          this.$emit('zoomIn');
+        }
+        if (event.deltaY > 0) {
+          this.$emit('zoomOut');
+        }
       }
     }
   }
