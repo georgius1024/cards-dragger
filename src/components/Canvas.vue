@@ -8,7 +8,7 @@
     @mouseup="mouseStopScroll"
     @mouseout="mouseStopScroll"
     @mousemove="mouseScroll"
-    @wheel1="mouseZoom"
+    @wheel="mouseZoom"
     @click.stop="nodeClick(null)"
   >
     <div
