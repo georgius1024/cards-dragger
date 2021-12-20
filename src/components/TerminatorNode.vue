@@ -57,5 +57,16 @@ export default {
   padding: 4px;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
+  &.drag-over {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  .dropzone {
+    position: absolute;
+    inset: -50px;
+    transition: all 200ms ease;
+    pointer-events: auto;
+  }
 }
 </style>
