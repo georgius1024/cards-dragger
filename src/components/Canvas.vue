@@ -119,6 +119,15 @@ export default {
       };
     }
   },
+  watch: {
+    zoom(newZoom, oldZoom) {
+      if (newZoom !== oldZoom) {
+        const { width, height } = this.$refs.scroller.getBoundingClientRect();
+        this.$refs.scroller.scrollLeft += (newZoom - oldZoom) * width;
+        this.$refs.scroller.scrollTop += (newZoom - oldZoom) * height;
+      }
+    }
+  },
   methods: {
     gridToCanvasX(col) {
       return col * this.sceneStepX;
