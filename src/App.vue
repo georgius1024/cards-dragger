@@ -267,7 +267,8 @@ export default {
     addNode(id) {
       const pickerItem = this.availableTypes.find((e) => e.id === id);
       if (pickerItem) {
-        return this.attachNewNode(pickerItem, this.selectedNode);
+        this.attachNewNode(pickerItem, this.selectedNode);
+        this.selectedNode = null;
       }
     },
     attachNewNode(picked, targetNode, left = null) {
