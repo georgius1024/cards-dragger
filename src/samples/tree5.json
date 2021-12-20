@@ -1,0 +1,134 @@
+[
+  {
+    "id": "rPZ6eoTwXV8VzIhM86Fx1",
+    "parent": null,
+    "type": "flash",
+    "left": null
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "lKM14IIulf10_nhSrRK4L",
+    "parent": "rPZ6eoTwXV8VzIhM86Fx1",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "Ia2aXLfrCUrNxwK378I-N",
+    "parent": "lKM14IIulf10_nhSrRK4L",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "LfCR8Ig3Rc796W1NVPASL",
+    "parent": "Ia2aXLfrCUrNxwK378I-N",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "rr0fGgdVwgPuaO2OPiWvF",
+    "parent": "LfCR8Ig3Rc796W1NVPASL",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "-RqeOiZ_nCIhuKs6zuEmy",
+    "parent": "rr0fGgdVwgPuaO2OPiWvF",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "LhUErR8ChdD0pT9X5WD-9",
+    "parent": "-RqeOiZ_nCIhuKs6zuEmy",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "ZkkoZMexYfIUCZJ2rLV3o",
+    "parent": "LhUErR8ChdD0pT9X5WD-9",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "b2kGZPir-XbXsAsce4pp_",
+    "parent": "ZkkoZMexYfIUCZJ2rLV3o",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "2teHL3c1slCu1iGC7FhEB",
+    "parent": "b2kGZPir-XbXsAsce4pp_",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "xEQI2PIHb3hUG42ne6L-Z",
+    "parent": "2teHL3c1slCu1iGC7FhEB",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "f-dYwQDbBIUokNtnh77Gi",
+    "parent": "xEQI2PIHb3hUG42ne6L-Z",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "Gk7Awyg9rjoXHgYRxxeXu",
+    "parent": "f-dYwQDbBIUokNtnh77Gi",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "EI4rI8-Ws3xnW8ogM1z5q",
+    "parent": "Gk7Awyg9rjoXHgYRxxeXu",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "9y_7pOr8B1tKafaSm3enV",
+    "parent": "EI4rI8-Ws3xnW8ogM1z5q",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "KgBuNhTWdeLUY9pc5xb1H",
+    "parent": "9y_7pOr8B1tKafaSm3enV",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "givEYKBh2P-ODM9dE-0AT",
+    "parent": "KgBuNhTWdeLUY9pc5xb1H",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "6zJOPQOcOAsbajNmnHm8W",
+    "parent": "givEYKBh2P-ODM9dE-0AT",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "kMbrw08G_BPv59UE60RT2",
+    "parent": "6zJOPQOcOAsbajNmnHm8W",
+    "left": true
+  }
+]

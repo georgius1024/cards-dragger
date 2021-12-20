@@ -1,7 +1,13 @@
 <template>
   <Layout>
     <template v-slot:sidebar>
-      <Sidebar :samples="samples" :rejected="rejected" @delete="deleteNode" />
+      <Sidebar
+        :nodes="availableTypes"
+        :samples="samples"
+        :rejected="rejected"
+        @delete="deleteNode"
+        @select="loadSample"
+      />
     </template>
     <template v-slot:header>
       <Header
@@ -23,6 +29,8 @@
       @update="updateScene"
       @dropNode="dropNode"
       @drop="dropOff"
+      @zoomIn="zoomIn"
+      @zoomOut="zoomOut"
     />
   </Layout>
 </template>
@@ -42,7 +50,7 @@ import {
   redo
 } from './utils/history';
 const treeUtils = require('./utils/tree');
-
+import samples from './samples';
 export default {
   components: {
     Layout,
@@ -96,13 +104,14 @@ export default {
     hasUnsavedChanges() {
       return this.undoable;
     },
+    availableTypes() {
+      return ['delay', 'email', 'fork'].map((type) => ({
+        type,
+        id: nanoid()
+      }));
+    },
     samples() {
-      return ['delay', 'email', 'fork', 'run', 'account', 'headset'].map(
-        (type) => ({
-          type,
-          id: nanoid()
-        })
-      );
+      return samples.map(({ id, name }) => ({ id, name }));
     },
     initialScene() {
       return [
@@ -189,10 +198,20 @@ export default {
     },
     load() {
       try {
-        const savedScene = JSON.parse(localStorage['savedScene']);
+        const savedScene = JSON.parse(localStorage['savedScene'] || '0');
         if (Array.isArray(savedScene)) {
           this.history = initialize(treeUtils.load(savedScene));
         }
+      } catch (e) {
+        console.error(e);
+        this.erase();
+      }
+    },
+    loadSample(id) {
+      try {
+        const sample = samples.find((e) => e.id === id);
+        const newScene = treeUtils.load(sample.data);
+        this.history = initialize(newScene);
       } catch (e) {
         console.error(e);
         this.erase();
@@ -227,9 +246,9 @@ export default {
         return;
       }
 
-      const sampleItem = this.samples.find((e) => e.id === from);
-      if (sampleItem) {
-        return this.attachNewNode(sampleItem, targetNode, left);
+      const pickerItem = this.availableTypes.find((e) => e.id === from);
+      if (pickerItem) {
+        return this.attachNewNode(pickerItem, targetNode, left);
       }
       const sceneItem = this.scene[from];
       if (sceneItem) {
@@ -241,10 +260,10 @@ export default {
       const from = event.dataTransfer.getData('id');
       this.reject(from);
     },
-    attachNewNode(sample, targetNode, left = null) {
+    attachNewNode(picked, targetNode, left = null) {
       const nodeToInsert = {
-        ...sample,
-        fork: sample.type === 'fork',
+        ...picked,
+        fork: picked.type === 'fork',
         id: nanoid()
       };
       try {

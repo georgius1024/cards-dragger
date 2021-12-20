@@ -1,0 +1,302 @@
+[
+  {
+    "id": "oPRR_Zfc49cD4QGptBOPk",
+    "parent": null,
+    "type": "flash",
+    "left": null
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "EwhrQEVOiikiZ-P8MQFxV",
+    "parent": "oPRR_Zfc49cD4QGptBOPk",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "8xU5U5__V_3csDXplazw-",
+    "parent": "EwhrQEVOiikiZ-P8MQFxV",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "wt7ufIQHJ-vaC3Vfyw5Iy",
+    "parent": "8xU5U5__V_3csDXplazw-",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "F5T4GtIwsKkdE-z6ig5PU",
+    "parent": "wt7ufIQHJ-vaC3Vfyw5Iy",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "mEd0tRYy2ybAt2Vbd0GNF",
+    "parent": "F5T4GtIwsKkdE-z6ig5PU",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "bzKbAlLc-C6WIledLGXiM",
+    "parent": "mEd0tRYy2ybAt2Vbd0GNF",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "jZPIDm4bD0MnJuyCjieXD",
+    "parent": "bzKbAlLc-C6WIledLGXiM",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "l87tluQ0JWS1I-gFdcN3w",
+    "parent": "jZPIDm4bD0MnJuyCjieXD",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "uuFVj4p9hACyY-BCIFfkl",
+    "parent": "l87tluQ0JWS1I-gFdcN3w",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "fb8ZX1on_HYcZLbnR0C7-",
+    "parent": "uuFVj4p9hACyY-BCIFfkl",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "xiUlPsSxDAsRmXOCOd1YE",
+    "parent": "fb8ZX1on_HYcZLbnR0C7-",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "Y8CbjFQORrc2SiELwmq8q",
+    "parent": "xiUlPsSxDAsRmXOCOd1YE",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "QpnhkPN3tMPX1oLgswdUc",
+    "parent": "Y8CbjFQORrc2SiELwmq8q",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "jYGcMD7thEbkmwZvnQDeI",
+    "parent": "QpnhkPN3tMPX1oLgswdUc",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "lsTHafE52DUK_V33nyDUv",
+    "parent": "jYGcMD7thEbkmwZvnQDeI",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "IuioqG6Zwx5HZCBeab_2c",
+    "parent": "lsTHafE52DUK_V33nyDUv",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "IrhwC9W7d6nxUd4I80Ott",
+    "parent": "IuioqG6Zwx5HZCBeab_2c",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "Au82rlMMvHEyxpYIkTRLs",
+    "parent": "jYGcMD7thEbkmwZvnQDeI",
+    "left": false
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "eTFr3MFxlrGcr9fV4ms0i",
+    "parent": "Au82rlMMvHEyxpYIkTRLs",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "VrR5Hv4ZyxORjnvwk0uk9",
+    "parent": "eTFr3MFxlrGcr9fV4ms0i",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "iVFIwiTuh_8TSoYm-y9HH",
+    "parent": "VrR5Hv4ZyxORjnvwk0uk9",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "fLLgnOqEHDWPut5g-2kqO",
+    "parent": "iVFIwiTuh_8TSoYm-y9HH",
+    "left": false
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "PlyFI0bGBkHfUEJXZuycu",
+    "parent": "fLLgnOqEHDWPut5g-2kqO",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "ltLLfFYgrn4YK1BPQ1kiN",
+    "parent": "PlyFI0bGBkHfUEJXZuycu",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "BR_YffXNWr-4DZEqPO1ip",
+    "parent": "ltLLfFYgrn4YK1BPQ1kiN",
+    "left": false
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "uYpCm2vYPCivAxqKYVRGo",
+    "parent": "wt7ufIQHJ-vaC3Vfyw5Iy",
+    "left": false
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "tBixA7flUa6Kup-zXdig9",
+    "parent": "uYpCm2vYPCivAxqKYVRGo",
+    "left": true
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "GcFsjDrUIPnKhnpBkSpTt",
+    "parent": "tBixA7flUa6Kup-zXdig9",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "mdAfWuBd6t8WPusK5wNEh",
+    "parent": "GcFsjDrUIPnKhnpBkSpTt",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "FvQdtPgV0bPHX03K7_XzO",
+    "parent": "mdAfWuBd6t8WPusK5wNEh",
+    "left": false
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "qDq8K7ok1Ey2p3f8hl4p2",
+    "parent": "FvQdtPgV0bPHX03K7_XzO",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "mOmt4je5vB2t5ppQZxTs3",
+    "parent": "qDq8K7ok1Ey2p3f8hl4p2",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "JYXHvKH3eMgXHfW1f90IO",
+    "parent": "mOmt4je5vB2t5ppQZxTs3",
+    "left": false
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "OAZhsxIg_wnMUAvyBcF3k",
+    "parent": "JYXHvKH3eMgXHfW1f90IO",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "DVsMnWbtWQZ4eFs33oi48",
+    "parent": "OAZhsxIg_wnMUAvyBcF3k",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "e3oaBWyF56DNmm-8bd0D_",
+    "parent": "DVsMnWbtWQZ4eFs33oi48",
+    "left": false
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "o8IZ9LY_W3nGIPntxt12P",
+    "parent": "e3oaBWyF56DNmm-8bd0D_",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "njcfQneHwGGEsZlmeT_tm",
+    "parent": "o8IZ9LY_W3nGIPntxt12P",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "zhElTMugjYDlU_4sT6Hg2",
+    "parent": "njcfQneHwGGEsZlmeT_tm",
+    "left": false
+  },
+  {
+    "type": "delay",
+    "fork": false,
+    "id": "dyaPuwkIINRbq_utuf-Pg",
+    "parent": "zhElTMugjYDlU_4sT6Hg2",
+    "left": true
+  },
+  {
+    "type": "fork",
+    "fork": true,
+    "id": "e7pHLtP21c0j9q9EPPLek",
+    "parent": "dyaPuwkIINRbq_utuf-Pg",
+    "left": true
+  },
+  {
+    "type": "email",
+    "fork": false,
+    "id": "mOYi9wK7RhsoLNQVh0f5y",
+    "parent": "e7pHLtP21c0j9q9EPPLek",
+    "left": false
+  }
+]
