@@ -1,25 +1,32 @@
 <template>
   <div class="sidebar">
-    <b>Drag and drop cards</b>
-    <div v-for="node in nodes" class="container" :key="node.type">
-      <BaseNode
-        :rejected="Boolean(rejected[node.id])"
-        :id="node.id"
-        :type="node.type"
-      />
-    </div>
-    <br />
-    <b>Or select premade series</b>
-    <div
-      v-for="sample in samples"
-      class="generic-node sample"
-      :key="sample.id"
-      @click="$emit('select', sample.id)"
-    >
-      {{ sample.name }}
-    </div>
-    <div class="separator"></div>
-    <Trash :rejected="rejected['trash']" @drop="onDelete" />
+    <template v-if="selected">
+      <BaseNode :id="selected.id" :draggable="false" :type="selected.type" />
+
+      {{ selected }}
+    </template>
+    <template v-else>
+      <b>Drag and drop cards</b>
+      <div v-for="node in nodes" class="container" :key="node.type">
+        <BaseNode
+          :rejected="Boolean(rejected[node.id])"
+          :id="node.id"
+          :type="node.type"
+        />
+      </div>
+      <br />
+      <b>Or select premade series</b>
+      <div
+        v-for="sample in samples"
+        class="generic-node sample"
+        :key="sample.id"
+        @click="$emit('select', sample.id)"
+      >
+        {{ sample.name }}
+      </div>
+      <div class="separator"></div>
+      <Trash :rejected="rejected['trash']" @drop="onDelete" />
+    </template>
   </div>
 </template>
 <script>
@@ -42,6 +49,9 @@ export default {
     samples: {
       type: Array,
       required: true
+    },
+    selected: {
+      type: Object
     }
   },
   methods: {

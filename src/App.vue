@@ -5,6 +5,7 @@
         :nodes="availableTypes"
         :samples="samples"
         :rejected="rejected"
+        :selected="selectedNode"
         @delete="deleteNode"
         @select="loadSample"
       />
@@ -31,6 +32,7 @@
       @drop="dropOff"
       @zoomIn="zoomIn"
       @zoomOut="zoomOut"
+      @select="selectNode"
     />
   </Layout>
 </template>
@@ -62,7 +64,8 @@ export default {
     return {
       history: null,
       rejected: {},
-      zoom: 1
+      zoom: 1,
+      selectedNode: null
     };
   },
   computed: {
@@ -323,6 +326,9 @@ export default {
         this.reject(id);
         return;
       }
+    },
+    selectNode(id) {
+      this.selectedNode = this.scene[id];
     },
     reject(id) {
       this.rejected[id] = true;

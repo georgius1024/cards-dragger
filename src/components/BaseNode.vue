@@ -3,7 +3,7 @@
     class="generic-node"
     :class="{ 'drag-over': dragOver, rejected }"
     :style="nodeStyle"
-    draggable="true"
+    :draggable="draggable"
     @dragstart="startDrag"
     @dragend="dragEnd"
     @dragover.prevent
@@ -92,6 +92,10 @@ export default {
     rejected: {
       type: Boolean,
       default: false
+    },
+    draggable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
