@@ -64,10 +64,17 @@
     <div style="flex-grow: 1"></div>
     <b>Add card below</b>
     <div v-for="node in nodes" class="container" :key="node.type">
-      <BaseNode :id="node.id" :type="node.type" @click="addNode(node.id)" />
+      <BaseNode
+        :id="node.id"
+        :type="node.type"
+        :draggable="false"
+        @click="addNode(node.id)"
+      />
     </div>
     <div class="container">
-      <button @click="$emit('delete', node.id)">Delete</button>
+      <button class="generic-node" @click="$emit('delete', node.id)">
+        Delete
+      </button>
     </div>
   </div>
 </template>
@@ -113,6 +120,10 @@ export default {
   flex-direction: column;
   .container {
     margin-top: 6px;
+    button {
+      width: 100%;
+      padding: 16px;
+    }
   }
   .tabs {
     margin-top: 16px;
