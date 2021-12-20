@@ -117,6 +117,9 @@ export default {
         minHeight: `${this.sceneMaxHeight * this.zoom}px`,
         transform: `scale(${this.zoom})`
       };
+    },
+    touchDevice() {
+      return 'ontouchstart' in window;
     }
   },
   watch: {
@@ -175,6 +178,9 @@ export default {
       this.$emit('select', id);
     },
     mouseStartScroll(event) {
+      if (this.touchDevice) {
+        return;
+      }
       if (event.buttons === 1) {
         this.dragging = {
           x: event.pageX,
