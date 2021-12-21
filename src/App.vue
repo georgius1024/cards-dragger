@@ -54,7 +54,7 @@ import {
   undo,
   redo
 } from './utils/history';
-const treeUtils = require('./utils/tree');
+import treeUtils from './utils/tree';
 import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
 export default {
