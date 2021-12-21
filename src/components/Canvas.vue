@@ -31,6 +31,7 @@
         :width="nodeWidth"
         :height="nodeHeight"
         :type="item.type"
+        :text="item.text"
         :leftConnection="connectionPoint(item.left)"
         :rightConnection="connectionPoint(item.right)"
         @dropOn="$emit('dropNode', $event)"

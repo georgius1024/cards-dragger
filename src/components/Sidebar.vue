@@ -5,7 +5,8 @@
         :node="selected"
         :nodes="nodes"
         @delete="$emit('delete', $event)"
-        @add="$emit('add', $event)"
+        @add="addNode"
+        @update="updateNode"
       />
     </template>
     <template v-else>
@@ -63,6 +64,12 @@ export default {
     onDelete(event) {
       const id = event.dataTransfer.getData('id');
       this.$emit('delete', id);
+    },
+    addNode(id, left) {
+      this.$emit('add', id, left);
+    },
+    updateNode(id, node) {
+      this.$emit('update', id, node);
     }
   }
 };

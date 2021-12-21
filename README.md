@@ -10,6 +10,6 @@ Todo
 - [x] Trash as regular node object
 - [x] Save/load local storage
 - [x] Zoom control
-- [ ] Node editing sidebar
+- [x] Node editing sidebar
 - [x] Better space on canvas (need margins on bottom/right)
-- [ ] Stylize node display, add texts
+- [x] Stylize node display, add texts

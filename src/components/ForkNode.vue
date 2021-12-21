@@ -16,8 +16,11 @@
     <div class="icon">
       <img :src="icons[type]" />
     </div>
-    <div class="desc">
-      {{ type.toUpperCase() }}
+    <div class="content">
+      <div class="desc">
+        {{ type.toUpperCase() }}
+      </div>
+      <div class="text" v-html="text" />
     </div>
   </div>
   <template v-if="bothChildren">

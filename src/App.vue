@@ -9,6 +9,7 @@
         @delete="deleteNode"
         @select="loadSample"
         @add="addNode"
+        @update="updateNode"
       />
     </template>
     <template v-slot:header>
@@ -53,6 +54,7 @@ import {
   redo
 } from './utils/history';
 const treeUtils = require('./utils/tree');
+import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
 export default {
   components: {
@@ -123,7 +125,8 @@ export default {
           id: nanoid(),
           parent: null,
           left: null,
-          type: 'flash'
+          type: 'flash',
+          text: defaultTypeText('flash')
         }
       ];
     }
@@ -264,17 +267,23 @@ export default {
       const from = event.dataTransfer.getData('id');
       this.reject(from);
     },
-    addNode(id) {
+    addNode(id, left) {
       const pickerItem = this.availableTypes.find((e) => e.id === id);
       if (pickerItem) {
-        this.attachNewNode(pickerItem, this.selectedNode);
+        this.attachNewNode(pickerItem, this.selectedNode, left);
         this.selectedNode = null;
       }
+    },
+    updateNode(id, node) {
+      const updated = treeUtils.clone(this.scene);
+      updated[id] = node;
+      this.updateScene(updated);
     },
     attachNewNode(picked, targetNode, left = null) {
       const nodeToInsert = {
         ...picked,
         fork: picked.type === 'fork',
+        text: defaultTypeText(picked.type),
         id: nanoid()
       };
       try {

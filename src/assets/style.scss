@@ -79,6 +79,19 @@ $primary-color: #0093ff;
   .icon {
     margin: 4px;
   }
+  .content {
+    margin-left: 16px;
+    .desc {
+      font-weight: 700;
+    }
+    .text {
+      line-height: 100%;
+      margin-top: 8px;
+      &:empty {
+        margin-top: 0px;
+      }
+    }
+  }
   &.drag-over {
     transform: scale(1.2);
     opacity: 0.5;
