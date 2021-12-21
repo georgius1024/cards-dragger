@@ -16,6 +16,7 @@
         :undoable="undoable"
         :redoable="redoable"
         :samples="samples"
+        :status="savingStatus"
         @undo="undo"
         @redo="redo"
         @erase="erase"
@@ -38,6 +39,7 @@
   </Layout>
 </template>
 <script>
+import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import Layout from './components/Layout.vue';
 import Sidebar from './components/Sidebar.vue';
@@ -67,7 +69,8 @@ export default {
       history: null,
       rejected: {},
       zoom: 1,
-      selectedNode: null
+      selectedNode: null,
+      savingStatus: ''
     };
   },
   computed: {
@@ -175,6 +178,8 @@ export default {
       }
     ];
     this.history = initialize(treeUtils.load(initial));
+
+    this.backgroundSaver = debounce(() => this.save(), 1000);
   },
   mounted() {
     try {
@@ -184,6 +189,7 @@ export default {
       // this.history = initialize(treeUtils.load(this.initialScene));
       this.erase();
     }
+    this.savingStatus = 'Saved';
     this.keyHandler = (e) => {
       const undoPressed =
         (e.code === 'KeyZ' && e.ctrlKey) ||
@@ -202,11 +208,13 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.keyHandler);
+    this.backgroundSaver.cancel();
   },
   methods: {
     save() {
       const savedScene = treeUtils.pack(this.scene);
       localStorage['savedScene'] = JSON.stringify(savedScene);
+      this.savingStatus = 'autosaved';
     },
     load() {
       try {
@@ -231,15 +239,18 @@ export default {
     },
     updateScene(scene) {
       this.history = addState(this.history, scene);
-      this.save();
+      this.savingStatus = '';
+      this.backgroundSaver();
     },
     undo() {
       this.history = undo(this.history);
-      this.save();
+      this.savingStatus = '';
+      this.backgroundSaver();
     },
     redo() {
       this.history = redo(this.history);
-      this.save();
+      this.savingStatus = '';
+      this.backgroundSaver();
     },
     erase() {
       this.history = initialize(treeUtils.load(this.initialScene));

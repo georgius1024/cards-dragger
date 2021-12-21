@@ -1,8 +1,13 @@
 <template>
   <header>
-    <h1>Cards</h1>
+    <h1>Flow composer</h1>
     <div class="separator" />
-    <DropDown>
+    <label
+      v-text="status"
+      class="primary-text mx-1"
+      style="text-transform: capitalize"
+    />
+    <DropDown class="mx-1">
       <template v-slot:label> Create workflow </template>
       <template v-slot:dropdown>
         <div class="dropdown-item" @click="$emit('erase')">
@@ -69,6 +74,9 @@ export default {
     samples: {
       type: Array,
       required: true
+    },
+    status: {
+      type: String
     }
   },
   methods: {
