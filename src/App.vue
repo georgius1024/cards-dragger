@@ -137,6 +137,9 @@ export default {
           text: defaultTypeText('flash')
         }
       ];
+    },
+    root() {
+      return Object.values(this.scene).find((e) => !e.parent);
     }
   },
   created() {
@@ -237,6 +240,19 @@ export default {
       }
     },
     updateScene(scene) {
+      const current = this.scene;
+      const problem = Object.values(scene).find(
+        (e) => !treeUtils.isInTree(scene, e.id, this.root.id)
+      );
+      if (problem) {
+        console.dir({
+          problem,
+          current,
+          scene
+        });
+        alert('Health check failed.');
+        throw new Error(`Health check failed. Check node "${problem.id}"`);
+      }
       this.history = addState(this.history, scene);
       this.savingStatus = '';
       this.backgroundSaver();
