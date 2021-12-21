@@ -2,11 +2,6 @@
   <header>
     <h1>Flow composer</h1>
     <div class="separator" />
-    <label
-      v-text="status"
-      class="primary-text mx-1"
-      style="text-transform: capitalize"
-    />
     <DropDown class="mx-1">
       <template v-slot:label> Create workflow </template>
       <template v-slot:dropdown>
@@ -56,6 +51,7 @@
         />
       </svg>
     </button>
+    <label v-text="status" class="mx-1 indicator" />
   </header>
 </template>
 <script>
@@ -145,6 +141,11 @@ header {
     &:hover {
       background-color: #ccc3;
     }
+  }
+  .indicator {
+    text-transform: capitalize;
+    min-width: 80px;
+    text-align: right;
   }
 }
 </style>
