@@ -321,6 +321,9 @@ export default {
         id: nanoid()
       };
       try {
+        if (targetNode.left && nodeToInsert.fork) {
+          throw new Error('Can attach new fork only to leaf node');
+        }
         const updated = treeUtils.insert(
           this.scene,
           targetNode.id,
@@ -331,6 +334,7 @@ export default {
         this.updateScene(updated);
       } catch (e) {
         console.error(e);
+        this.reject(picked.id);
         return this.reject(targetNode.id);
       }
     },
