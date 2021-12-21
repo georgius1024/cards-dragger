@@ -38,6 +38,11 @@
         @click="nodeClick(item.id)"
       />
     </div>
+    <ZoomControl
+      :zoomableIn="zoomableIn"
+      :zoomableOut="zoomableOut"
+      @zoom="$emit($event)"
+    />
   </div>
 </template>
 <script>
@@ -45,7 +50,7 @@ import ReingoldTilford from '../utils/ReingoldTilford';
 import BaseNode from './BaseNode.vue';
 import ForkNode from './ForkNode.vue';
 import TerminatorNode from './TerminatorNode.vue';
-
+import ZoomControl from './ZoomControl.vue';
 const GRID_STEP_X = 320;
 const GRID_STEP_Y = 180;
 const NODE_WIDTH = 300;
@@ -54,7 +59,8 @@ export default {
   components: {
     BaseNode,
     ForkNode,
-    TerminatorNode
+    TerminatorNode,
+    ZoomControl
   },
   props: {
     scene: {
@@ -68,6 +74,12 @@ export default {
     zoom: {
       type: Number,
       default: 1
+    },
+    zoomableIn: {
+      type: Boolean
+    },
+    zoomableOut: {
+      type: Boolean
     }
   },
   data() {

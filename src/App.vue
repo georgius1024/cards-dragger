@@ -16,19 +16,17 @@
       <Header
         :undoable="undoable"
         :redoable="redoable"
-        :zoomableIn="zoom < 1"
-        :zoomableOut="zoom > 0.3"
         @undo="undo"
         @redo="redo"
         @erase="erase"
-        @zoomIn="zoomIn"
-        @zoomOut="zoomOut"
       />
     </template>
     <Canvas
       :scene="widerScene"
       :rejected="rejected"
       :zoom="zoom"
+      :zoomableIn="zoomableIn"
+      :zoomableOut="zoomableOut"
       @update="updateScene"
       @dropNode="dropNode"
       @drop="dropOff"
@@ -106,6 +104,12 @@ export default {
     },
     redoable() {
       return Boolean(this.history && redoable(this.history));
+    },
+    zoomableIn() {
+      return this.zoom < 1;
+    },
+    zoomableOut() {
+      return this.zoom > 0.3;
     },
     hasUnsavedChanges() {
       return this.undoable;
