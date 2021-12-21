@@ -186,7 +186,6 @@ export default {
       this.load();
     } catch (e) {
       console.error(e);
-      // this.history = initialize(treeUtils.load(this.initialScene));
       this.erase();
     }
     this.savingStatus = 'Saved';
