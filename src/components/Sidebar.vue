@@ -18,16 +18,6 @@
           :type="node.type"
         />
       </div>
-      <br />
-      <b>Or select premade series</b>
-      <div
-        v-for="sample in samples"
-        class="generic-node sample"
-        :key="sample.id"
-        @click="$emit('select', sample.id)"
-      >
-        {{ sample.name }}
-      </div>
       <div class="separator"></div>
       <Trash :rejected="rejected['trash']" @drop="onDelete" />
     </template>
@@ -51,13 +41,6 @@ export default {
     rejected: {
       type: Object,
       required: true
-    },
-    samples: {
-      type: Array,
-      required: true
-    },
-    selected: {
-      type: Object
     }
   },
   methods: {

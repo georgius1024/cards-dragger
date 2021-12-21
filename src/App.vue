@@ -3,11 +3,9 @@
     <template v-slot:sidebar>
       <Sidebar
         :nodes="availableTypes"
-        :samples="samples"
         :rejected="rejected"
         :selected="selectedNode"
         @delete="deleteNode"
-        @select="loadSample"
         @add="addNode"
         @update="updateNode"
       />
@@ -16,9 +14,11 @@
       <Header
         :undoable="undoable"
         :redoable="redoable"
+        :samples="samples"
         @undo="undo"
         @redo="redo"
         @erase="erase"
+        @select="loadSample"
       />
     </template>
     <Canvas
