@@ -55,6 +55,35 @@
     </div>
     <div style="flex-grow: 1"></div>
     <b>Add card below</b>
+    <template v-if="(type = 'fork')">
+      <div class="tabs centered">
+        <div class="tab" :class="{ current: left }" @click="left = true">
+          <svg
+            style="width: 24px; height: 24px"
+            viewBox="0 0 24 24"
+            tooltip="To the left side"
+          >
+            <path
+              fill="currentColor"
+              d="M11,9L12.42,10.42L8.83,14H18V4H20V16H8.83L12.42,19.58L11,21L5,15L11,9Z"
+            />
+          </svg>
+        </div>
+        <div class="tab" :class="{ current: !left }" @click="left = false">
+          <svg
+            style="width: 24px; height: 24px"
+            viewBox="0 0 24 24"
+            tooltip="To the right side"
+          >
+            <path
+              fill="currentColor"
+              d="M19,15L13,21L11.58,19.58L15.17,16H4V4H6V14H15.17L11.58,10.42L13,9L19,15Z"
+            />
+          </svg>
+        </div>
+      </div>
+    </template>
+
     <div v-for="node in nodes" class="container" :key="node.type">
       <BaseNode
         :id="node.id"
@@ -89,19 +118,21 @@ export default {
   },
   data() {
     return {
-      currentTab: 0
+      currentTab: 0,
+      left: true
     };
   },
   watch: {
     node(newNode, oldNode) {
       if (newNode.id !== oldNode.id) {
         this.currentTab = 0;
+        this.left = true;
       }
     }
   },
   methods: {
-    addNode(id, left) {
-      this.$emit('add', id, left);
+    addNode(id) {
+      this.$emit('add', id, this.left);
     },
     updateNodeText({ target: { value } }) {
       this.$emit('update', this.node.id, { ...this.node, text: value });
@@ -128,6 +159,9 @@ export default {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    &.centered {
+      justify-content: center;
+    }
     .tab {
       padding: 8px;
       cursor: pointer;
@@ -139,7 +173,7 @@ export default {
   }
   .panels {
     border-top: 1px solid $primary-color;
-    padding-top: 32px;
+    padding-top: 8px;
     .tab {
       display: none;
       &.current {
