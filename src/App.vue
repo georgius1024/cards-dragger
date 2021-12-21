@@ -170,18 +170,21 @@ export default {
       {
         id: id4,
         parent: id3,
-        type: 'headset',
+        type: 'delay',
         left: true
       },
       {
         id: id5,
         parent: id3,
-        type: 'account',
+        type: 'email',
         left: false
       }
     ];
-    this.history = initialize(treeUtils.load(initial));
-
+    this.history = initialize(
+      treeUtils.load(
+        initial.map((e) => ({ ...e, text: defaultTypeText(e.type) }))
+      )
+    );
     this.backgroundSaver = debounce(() => this.save(), 1000);
   },
   mounted() {
