@@ -2,7 +2,7 @@
   <header>
     <h1>Cards</h1>
     <div class="separator" />
-    <label>Erase</label>
+    <label class="primary-text" @click="$emit('erase')">Erase</label>
     <button class="primary-border primary-text" @click="$emit('erase')">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
@@ -11,12 +11,10 @@
         />
       </svg>
     </button>
-    <label>Undo/redo</label>
-    <button
-      class="primary-border primary-text"
-      @click="undo"
-      :disabled="!undoable"
+    <label class="primary-text" @click="undo" :disabled="!undoable"
+      >Undo/redo</label
     >
+    <button class="primary-text" @click="undo" :disabled="!undoable">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -24,11 +22,7 @@
         />
       </svg>
     </button>
-    <button
-      class="primary-border primary-text"
-      @click="redo"
-      :disabled="!redoable"
-    >
+    <button class="primary-text" @click="redo" :disabled="!redoable">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -36,12 +30,8 @@
         />
       </svg>
     </button>
-    <label>Zoom</label>
-    <button
-      class="primary-border primary-text"
-      :disabled="!zoomableIn"
-      @click="zoomIn"
-    >
+    <label class="primary-text">Zoom</label>
+    <button class="primary-text" :disabled="!zoomableIn" @click="zoomIn">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -49,11 +39,7 @@
         />
       </svg>
     </button>
-    <button
-      class="primary-border primary-text"
-      :disabled="!zoomableOut"
-      @click="zoomOut"
-    >
+    <button class="primary-text" :disabled="!zoomableOut" @click="zoomOut">
       <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -103,6 +89,7 @@ header {
   display: flex;
   align-items: center;
   padding: 0 32px;
+  user-select: none;
   .separator {
     flex-grow: 1;
   }
@@ -112,17 +99,20 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
     width: 32px;
     height: 32px;
     margin: 16px;
     cursor: pointer;
+    border-style: none;
     &:disabled {
       color: #33f3;
     }
   }
   button + button {
     margin-left: 0px;
+  }
+  label {
+    cursor: pointer;
   }
 }
 </style>
