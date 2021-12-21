@@ -7,6 +7,7 @@
         @delete="$emit('delete', $event)"
         @add="addNode"
         @update="updateNode"
+        @close="$emit('unselect')"
       />
     </template>
     <template v-else>
@@ -41,6 +42,9 @@ export default {
     rejected: {
       type: Object,
       required: true
+    },
+    selected: {
+      type: Object
     }
   },
   methods: {

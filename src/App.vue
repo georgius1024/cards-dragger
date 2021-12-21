@@ -8,6 +8,7 @@
         @delete="deleteNode"
         @add="addNode"
         @update="updateNode"
+        @unselect="selectedNode = null"
       />
     </template>
     <template v-slot:header>
