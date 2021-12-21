@@ -136,7 +136,7 @@ export default {
       };
     },
     textPoint() {
-      const dx = (this.width - this.radius) / 2;
+      const dx = Math.min((this.width - this.radius) / 2, 64);
       return {
         x:
           this.fromX < this.toX
