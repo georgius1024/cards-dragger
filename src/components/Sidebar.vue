@@ -82,5 +82,7 @@ export default {
     align-items: center;
     justify-content: center;
   }
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
 }
 </style>
