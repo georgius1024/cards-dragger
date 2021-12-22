@@ -321,8 +321,22 @@ export default {
         id: nanoid()
       };
       try {
-        if (targetNode.left && nodeToInsert.fork) {
-          throw new Error('Can attach new fork only to leaf node');
+        if (nodeToInsert.fork) {
+          // only attach to open connections
+          if (targetNode.fork) {
+            // check both connectons
+            if (left && targetNode.left) {
+              throw new Error('Can attach new fork only to leaf node');
+            }
+            if (!left && targetNode.right) {
+              throw new Error('Can attach new fork only to leaf node');
+            }
+          } else {
+            // check left connection
+            if (targetNode.left) {
+              throw new Error('Can attach new fork only to leaf node');
+            }
+          }
         }
         const updated = treeUtils.insert(
           this.scene,
