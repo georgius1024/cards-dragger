@@ -30,7 +30,7 @@ export default {
           const clickInside =
             element.contains(event.target) && isVisible(element);
           if (!clickInside) {
-            binding.value();
+            binding.value(event);
           }
         }
       }

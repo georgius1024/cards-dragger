@@ -1,5 +1,5 @@
 <template>
-  <div class="drop-down" :class="{ active }" @click="active = !active">
+  <div class="drop-down" :class="{ active }" @click="dropDown">
     <div class="header" :class="{ active }">
       <div class="label"><slot name="label"></slot></div>
       <svg
@@ -24,7 +24,15 @@ export default {
     };
   },
   methods: {
+    dropDown() {
+      if (!this.active) {
+        this.active = true;
+      }
+    },
     clickOutside(event) {
+      if (this.$el.contains(event.target)) {
+        return;
+      }
       if (this.active) {
         this.active = !this.active;
       }
@@ -37,6 +45,7 @@ export default {
 .drop-down {
   position: relative;
   color: $primary-color;
+  cursor: pointer;
   transition: all 200ms ease;
 }
 .header {
