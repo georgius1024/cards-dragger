@@ -11,7 +11,7 @@
         <path fill="currentColor" d="M7,15L12,10L17,15H7Z" />
       </svg>
     </div>
-    <div class="dropdown" :class="{ active }">
+    <div class="dropdown" v-click-outside="clickOutside" :class="{ active }">
       <slot name="dropdown"></slot>
     </div>
   </div>
@@ -22,6 +22,13 @@ export default {
     return {
       active: false
     };
+  },
+  methods: {
+    clickOutside(event) {
+      if (this.active) {
+        this.active = !this.active;
+      }
+    }
   }
 };
 </script>
