@@ -10,6 +10,7 @@
         @update="updateNode"
         @unselect="selectedNode = null"
       />
+      <SidePanel v-model="show"> Content lorem etc </SidePanel>
     </template>
     <template v-slot:header>
       <Header
@@ -58,12 +59,14 @@ import {
 import treeUtils from './utils/tree';
 import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
+import SidePanel from './components/SidePanel.vue';
 export default {
   components: {
     Layout,
     Sidebar,
     Header,
-    Canvas
+    Canvas,
+    SidePanel
   },
   data() {
     return {
@@ -71,7 +74,8 @@ export default {
       rejected: {},
       zoom: 1,
       selectedNode: null,
-      savingStatus: ''
+      savingStatus: '',
+      show: false
     };
   },
   computed: {
@@ -310,6 +314,7 @@ export default {
       }
     },
     addThere(id, left) {
+      this.show = true;
       console.log('addThere', id, left);
     },
     updateNode(id, node) {
