@@ -50,15 +50,15 @@
     v-if="add"
     :x="addPoint.x"
     :y="addPoint.y"
-    @click="$emit('click', $event)"
-    @drop="$emit('drop', $event)"
+    @addThere="$emit('addThere', $event)"
+    @dropOn="$emit('dropOn', $event)"
   />
 </template>
 <script>
 import AddThereControl from './AddThereControl.vue';
 export default {
   props: ['fromX', 'fromY', 'toX', 'toY', 'stroke', 'add'],
-  emits: ['click', 'drop'],
+  emits: ['addThere', 'dropOn'],
   components: {
     AddThereControl
   },

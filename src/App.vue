@@ -30,11 +30,12 @@
       :zoomableIn="zoomableIn"
       :zoomableOut="zoomableOut"
       @update="updateScene"
-      @dropNode="dropNode"
+      @dropOn="dropOn"
       @drop="dropOff"
       @zoomIn="zoomIn"
       @zoomOut="zoomOut"
       @select="selectNode"
+      @addThere="addThere"
     />
   </Layout>
 </template>
@@ -279,7 +280,7 @@ export default {
     zoomOut() {
       this.zoom = Math.max(this.zoom - 0.1, 0.3);
     },
-    dropNode({ from, to, left = null }) {
+    dropOn({ from, to, left = null }) {
       const targetNode = this.scene[to];
       if (!targetNode) {
         this.reject(from);
@@ -307,6 +308,9 @@ export default {
         this.attachNewNode(pickerItem, this.selectedNode, left);
         this.selectedNode = null;
       }
+    },
+    addThere(id, left) {
+      console.log('addThere', id, left);
     },
     updateNode(id, node) {
       const updated = treeUtils.clone(this.scene);

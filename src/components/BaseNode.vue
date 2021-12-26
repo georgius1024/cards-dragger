@@ -9,7 +9,7 @@
     @dragover.prevent
     @dragenter.prevent="dragenter"
     @dragleave.prevent="dragleave"
-    @drop.stop="drop"
+    @drop.stop="dropOn"
     @click.stop="click"
     @mousedown.stop
   >
@@ -31,8 +31,8 @@
     :toY="singleChildConnection.y"
     stroke="4"
     :add="true"
-    @click="click"
-    @drop="drop"
+    @addThere="addThere"
+    @dropOn="dropOn"
   />
 </template>
 <script>
@@ -113,7 +113,7 @@ export default {
       dragOver: false
     };
   },
-  emits: ['dropOn', 'dragStart', 'click'],
+  emits: ['dropOn', 'dragStart', 'click', 'addThere'],
   computed: {
     icons() {
       return {
@@ -192,7 +192,7 @@ export default {
     dragleave() {
       this.dragOver = false;
     },
-    drop(event) {
+    dropOn(event) {
       this.dragOver = false;
       const from = event.dataTransfer.getData('id');
       const to = this.id;
@@ -200,6 +200,9 @@ export default {
     },
     click() {
       this.$emit('click', this.id);
+    },
+    addThere() {
+      this.$emit('addThere', this.id);
     }
   }
 };

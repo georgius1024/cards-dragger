@@ -91,10 +91,22 @@
   >
     {{ text }}
   </div>
+  <AddThereControl
+    v-if="add"
+    :x="addPoint.x"
+    :y="addPoint.y"
+    @addThere="$emit('addThere', $event)"
+    @dropOn="$emit('dropOn', $event)"
+  />
 </template>
 <script>
+import AddThereControl from './AddThereControl.vue';
 export default {
-  props: ['fromX', 'fromY', 'toX', 'toY', 'stroke', 'radius', 'text'],
+  props: ['fromX', 'fromY', 'toX', 'toY', 'stroke', 'radius', 'text', 'add'],
+  emits: ['addThere', 'dropOn'],
+  components: {
+    AddThereControl
+  },
   computed: {
     isRight() {
       return this.toX > this.fromX;
@@ -178,6 +190,12 @@ export default {
         left: `${this.left}px`,
         top: `${this.top}px`,
         zIndex: 10
+      };
+    },
+    addPoint() {
+      return {
+        x: this.left + this.width / 2,
+        y: this.top + this.height / 2
       };
     }
   }

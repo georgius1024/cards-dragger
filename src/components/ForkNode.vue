@@ -9,7 +9,7 @@
     @dragover.prevent
     @dragenter.prevent="dragenter"
     @dragleave.prevent="dragleave"
-    @drop.stop="drop"
+    @drop.stop="dropOn"
     @click.stop="click"
     @mousedown.stop
   >
@@ -30,9 +30,12 @@
       :fromY="centralConnectionPoint.y"
       :toX="leftConnection.x"
       :toY="leftConnection.y"
+      :add="true"
       text="Yes"
       stroke="4"
       radius="6"
+      @addThere="addThereLeft"
+      @dropOn="dropOnLeft"
     />
     <SideConnector
       v-if="rightConnection"
@@ -40,9 +43,12 @@
       :fromY="centralConnectionPoint.y"
       :toX="rightConnection.x"
       :toY="rightConnection.y"
+      :add="true"
       text="No"
       stroke="4"
       radius="6"
+      @addThere="addThereRight"
+      @dropOn="dropOnRight"
     />
   </template>
   <template v-else-if="singleChild">
@@ -97,6 +103,26 @@ export default {
       if (this.rightConnection) {
         return this.rightConnection;
       }
+    }
+  },
+  methods: {
+    addThereLeft() {
+      this.$emit('addThere', this.id, true);
+    },
+    addThereRight() {
+      this.$emit('addThere', this.id, false);
+    },
+    dropOnLeft(event) {
+      this.dragOver = false;
+      const from = event.dataTransfer.getData('id');
+      const to = this.id;
+      this.$emit('dropOn', { from, to, left: true });
+    },
+    dropOnRight(event) {
+      this.dragOver = false;
+      const from = event.dataTransfer.getData('id');
+      const to = this.id;
+      this.$emit('dropOn', { from, to, left: false });
     }
   }
 };

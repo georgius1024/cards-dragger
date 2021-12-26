@@ -3,7 +3,7 @@
     class="generic-node add-there-control"
     :class="{ 'drag-over': dragOver }"
     :style="controlStyle"
-    @click.stop="$emit('click', $event)"
+    @click.stop="$emit('addThere')"
     @mousedown.stop
   >
     <div
@@ -30,10 +30,10 @@ export default {
     },
     size: {
       type: [String, Number],
-      default: 28
+      default: 36
     }
   },
-  emits: ['click', 'drop'],
+  emits: ['addThere', 'dropOn'],
   data() {
     return {
       dragOver: false
@@ -65,7 +65,7 @@ export default {
       this.dragOver = false;
     },
     drop(event) {
-      this.$emit('drop', event);
+      this.$emit('dropOn', event);
       this.dragOver = false;
     }
   }
@@ -79,7 +79,7 @@ export default {
   justify-content: center;
   &.drag-over {
     transform: scale(1.5);
-    opacity: 0.5;
+    opacity: 1;
   }
   .dropzone {
     position: absolute;

@@ -34,8 +34,9 @@
         :text="item.text"
         :leftConnection="connectionPoint(item.left)"
         :rightConnection="connectionPoint(item.right)"
-        @dropOn="$emit('dropNode', $event)"
+        @dropOn="$emit('dropOn', $event)"
         @click="nodeClick(item.id)"
+        @addThere="addThere"
       />
     </div>
     <ZoomControl
@@ -194,6 +195,9 @@ export default {
     },
     nodeClick(id) {
       this.$emit('select', id);
+    },
+    addThere(id, left) {
+      this.$emit('addThere', id, left);
     },
     mouseStartScroll(event) {
       if (event.buttons === 1) {

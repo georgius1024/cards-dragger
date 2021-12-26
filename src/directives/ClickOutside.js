@@ -39,7 +39,7 @@ export default {
 
     document.addEventListener('mousedown', clickHandler);
   },
-  beforeUnmount(el) {
+  beforeUnmount(el, binding) {
     document.removeEventListener(
       'mousedown',
       binding.instance.$clickOutsideHandler
