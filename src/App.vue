@@ -10,7 +10,12 @@
         @update="updateNode"
         @unselect="selectedNode = null"
       />
-      <SidePanel v-model="show"> Content lorem etc </SidePanel>
+      <AddThereModal
+        :nodes="availableTypes"
+        :node="addThere.node"
+        v-model="addThere.show"
+        @selected="selectedAddThere"
+      />
     </template>
     <template v-slot:header>
       <Header
@@ -36,7 +41,7 @@
       @zoomIn="zoomIn"
       @zoomOut="zoomOut"
       @select="selectNode"
-      @addThere="addThere"
+      @addThere="initializeAddThere"
     />
   </Layout>
 </template>
@@ -59,14 +64,14 @@ import {
 import treeUtils from './utils/tree';
 import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
-import SidePanel from './components/SidePanel.vue';
+import AddThereModal from './components/AddThereModal.vue';
 export default {
   components: {
     Layout,
     Sidebar,
     Header,
     Canvas,
-    SidePanel
+    AddThereModal
   },
   data() {
     return {
@@ -75,7 +80,11 @@ export default {
       zoom: 1,
       selectedNode: null,
       savingStatus: '',
-      show: false
+      addThere: {
+        show: false,
+        node: {},
+        left: null
+      }
     };
   },
   computed: {
@@ -313,9 +322,18 @@ export default {
         this.selectedNode = null;
       }
     },
-    addThere(id, left) {
-      this.show = true;
-      console.log('addThere', id, left);
+    initializeAddThere(id, left) {
+      this.addThere.node = this.scene[id];
+      this.addThere.left = left;
+      this.addThere.show = Boolean(this.addThere.node);
+    },
+    selectedAddThere(id) {
+      const pickerItem = this.availableTypes.find((e) => e.id === id);
+      if (pickerItem) {
+        this.attachNewNode(pickerItem, this.addThere.node, this.addThere.left);
+        this.selectedNode = null;
+      }
+      this.addThere.show = false;
     },
     updateNode(id, node) {
       const updated = treeUtils.clone(this.scene);
