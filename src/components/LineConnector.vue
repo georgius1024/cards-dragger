@@ -46,10 +46,22 @@
       stroke-width="2"
     />
   </svg>
+  <AddThereControl
+    v-if="add"
+    :x="addPoint.x"
+    :y="addPoint.y"
+    @click="$emit('click', $event)"
+    @drop="$emit('drop', $event)"
+  />
 </template>
 <script>
+import AddThereControl from './AddThereControl.vue';
 export default {
-  props: ['fromX', 'fromY', 'toX', 'toY', 'stroke'],
+  props: ['fromX', 'fromY', 'toX', 'toY', 'stroke', 'add'],
+  emits: ['click', 'drop'],
+  components: {
+    AddThereControl
+  },
   computed: {
     padding() {
       return this.stroke * 2;
@@ -87,6 +99,12 @@ export default {
         left: `${this.left}px`,
         top: `${this.top}px`,
         zIndex: 10
+      };
+    },
+    addPoint() {
+      return {
+        x: this.left + this.width / 2,
+        y: this.top + this.height / 2 - this.stroke
       };
     }
   }

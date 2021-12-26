@@ -30,6 +30,9 @@
     :toX="singleChildConnection.x"
     :toY="singleChildConnection.y"
     stroke="4"
+    :add="true"
+    @click="click"
+    @drop="drop"
   />
 </template>
 <script>
@@ -104,6 +107,7 @@ export default {
       default: true
     }
   },
+  emits: ['click', 'drop'],
   data() {
     return {
       dragOver: false
