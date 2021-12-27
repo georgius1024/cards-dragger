@@ -1,38 +1,24 @@
 <template>
   <div class="sidebar">
-    <template v-if="selected">
-      <BlockViewer
-        :node="selected"
-        :nodes="nodes"
-        @delete="$emit('delete', $event)"
-        @add="addNode"
-        @update="updateNode"
-        @close="$emit('unselect')"
+    <b>Drag and drop cards</b>
+    <div v-for="node in nodes" class="container" :key="node.type">
+      <BaseNode
+        :rejected="Boolean(rejected[node.id])"
+        :id="node.id"
+        :type="node.type"
       />
-    </template>
-    <template v-else>
-      <b>Drag and drop cards</b>
-      <div v-for="node in nodes" class="container" :key="node.type">
-        <BaseNode
-          :rejected="Boolean(rejected[node.id])"
-          :id="node.id"
-          :type="node.type"
-        />
-      </div>
-      <div class="separator"></div>
-      <Trash :rejected="rejected['trash']" @drop="onDelete" />
-    </template>
+    </div>
+    <div class="separator"></div>
+    <Trash :rejected="rejected['trash']" @drop="onDelete" />
   </div>
 </template>
 <script>
 import BaseNode from './BaseNode.vue';
-import BlockViewer from './BlockViewer.vue';
 import Trash from './Trash.vue';
 export default {
   components: {
     BaseNode,
-    Trash,
-    BlockViewer
+    Trash
   },
   props: {
     nodes: {
@@ -51,12 +37,6 @@ export default {
     onDelete(event) {
       const id = event.dataTransfer.getData('id');
       this.$emit('delete', id);
-    },
-    addNode(id, left) {
-      this.$emit('add', id, left);
-    },
-    updateNode(id, node) {
-      this.$emit('update', id, node);
     }
   }
 };

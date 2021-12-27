@@ -1,22 +1,20 @@
 <template>
-  <div ref="background" class="background">
-    <div
-      class="panel"
-      ref="panel"
-      :style="panelStyle"
-      @transitionend="afterTransition"
-      v-click-outside="handleClickOutside"
-    >
-      <button v-if="closeClick" class="close-control" @click="handleClose">
-        <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-          <path
-            fill="currentColor"
-            d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-          />
-        </svg>
-      </button>
-      <slot> </slot>
-    </div>
+  <div
+    class="panel"
+    ref="panel"
+    :style="panelStyle"
+    @transitionend="afterTransition"
+    v-click-outside="handleClickOutside"
+  >
+    <button v-if="closeClick" class="close-control" @click="handleClose">
+      <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
+        />
+      </svg>
+    </button>
+    <slot> </slot>
   </div>
 </template>
 <script>
@@ -67,13 +65,12 @@ export default {
     },
     afterTransition() {
       if (!this.modelValue) {
-        document.body.style.overflowY = 'auto';
-        this.$refs.background.classList.remove('show');
+        // document.body.style.overflowY = 'auto';
       }
     },
     show() {
-      document.body.style.overflowY = 'hidden';
-      this.$refs.background.classList.add('show');
+      // document.body.style.overflowY = 'hidden';
+      // this.$refs.background.classList.add('show');
       this.$refs.panel.classList.add('show');
     },
     handleClickOutside() {
@@ -93,44 +90,43 @@ export default {
 </script>
 <style lang="scss" scoped>
 .background {
+  // top: 0;
+  // left: 0;
+  // width: 100vw;
+  // height: 100vh;
+  // position: fixed;
+  // opacity: 0;
+  // transform: translateY(-100%);
+  &.show {
+    // transform: translateY(0);
+    // opacity: 1;
+  }
+}
+.panel {
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
   height: 100vh;
-  position: fixed;
-  z-index: 10;
-  opacity: 0;
-  transform: translateY(-100%);
+  z-index: 11;
+  display: block;
+  box-shadow: 4px 6px 2px rgba(0, 0, 0, 0.32);
+  transform: translateX(calc(-100% - 5px));
+  transition: transform 500ms ease;
+  background-color: #fff;
+  padding: 48px 16px 16px;
   &.show {
-    transform: translateY(0);
-    opacity: 1;
+    transform: translateX(0);
   }
-  .panel {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 11;
-    display: block;
-    box-shadow: 4px 6px 2px rgba(0, 0, 0, 0.32);
-    transform: translateX(-100vw);
-    transition: transform 200ms ease;
-    background-color: #fff;
-    padding: 48px 16px 16px;
-    &.show {
-      transform: translateX(0);
-    }
-    .close-control {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: transparent;
-      outline: none;
-      border: none;
-      font-size: 32px;
-      color: #0093ff;
-      cursor: pointer;
-    }
+  .close-control {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    outline: none;
+    border: none;
+    font-size: 32px;
+    color: #0093ff;
+    cursor: pointer;
   }
 }
 </style>

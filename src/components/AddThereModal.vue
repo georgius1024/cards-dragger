@@ -3,7 +3,18 @@
     :modelValue="modelValue"
     @close="$emit('update:modelValue', false)"
   >
-    <b>Select node to add</b>
+    <label>Selected node</label>
+    <BaseNode
+      v-if="node.id"
+      :id="node.id"
+      :draggable="false"
+      :type="node.type"
+      :text="node.text"
+    />
+
+    <label v-if="isBelowConnection">Add after selected</label>
+    <label v-if="isLeftConnection">Add to the left side of selected</label>
+    <label v-if="isRightConnection">Add to the right side of selected</label>
     <div v-for="node in validChilds" class="container" :key="node.type">
       <BaseNode
         :id="node.id"
@@ -35,17 +46,33 @@ export default {
     node: {
       type: Object,
       required: true
+    },
+    left: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
-    isLeaf() {
-      return !this.node?.left && !this.node?.right;
+    isFreeConnection() {
+      if (this.left) {
+        return !this.node?.left;
+      }
+      return !this.node?.right;
     },
     validChilds() {
-      if (this.isLeaf) {
+      if (this.isFreeConnection) {
         return this.nodes;
       }
       return this.nodes.filter((e) => e.type !== 'fork');
+    },
+    isBelowConnection() {
+      return !this.node?.fork;
+    },
+    isLeftConnection() {
+      return this.node?.fork && this.left;
+    },
+    isRightConnection() {
+      return this.node?.fork && !this.left;
     }
   }
 };

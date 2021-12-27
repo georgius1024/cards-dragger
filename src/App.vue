@@ -4,17 +4,20 @@
       <Sidebar
         :nodes="availableTypes"
         :rejected="rejected"
-        :selected="selectedNode"
         @delete="deleteNode"
-        @add="addNode"
-        @update="updateNode"
-        @unselect="selectedNode = null"
       />
       <AddThereModal
         :nodes="availableTypes"
         :node="addThere.node"
+        :left="addThere.left"
         v-model="addThere.show"
         @selected="selectedAddThere"
+      />
+      <ViewNodeModal
+        :node="viewNode.node"
+        v-model="viewNode.show"
+        @update="updateNode"
+        @delete="deleteNode"
       />
     </template>
     <template v-slot:header>
@@ -40,7 +43,7 @@
       @drop="dropOff"
       @zoomIn="zoomIn"
       @zoomOut="zoomOut"
-      @select="selectNode"
+      @select="initializeViewNode"
       @addThere="initializeAddThere"
     />
   </Layout>
@@ -65,13 +68,15 @@ import treeUtils from './utils/tree';
 import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
 import AddThereModal from './components/AddThereModal.vue';
+import ViewNodeModal from './components/ViewNodeModal.vue';
 export default {
   components: {
     Layout,
     Sidebar,
     Header,
     Canvas,
-    AddThereModal
+    AddThereModal,
+    ViewNodeModal
   },
   data() {
     return {
@@ -84,6 +89,10 @@ export default {
         show: false,
         node: {},
         left: null
+      },
+      viewNode: {
+        show: false,
+        node: {}
       }
     };
   },
@@ -323,9 +332,20 @@ export default {
       }
     },
     initializeAddThere(id, left) {
-      this.addThere.node = this.scene[id];
-      this.addThere.left = left;
-      this.addThere.show = Boolean(this.addThere.node);
+      if (id) {
+        this.addThere.node = this.scene[id];
+        this.addThere.left = left;
+        this.viewNode.show = true;
+        if (this.addThere.show) {
+          this.addThere.show = false;
+          setTimeout(() => (this.addThere.show = true), 400);
+        } else {
+          this.addThere.show = true;
+        }
+      } else {
+        this.addThere.show = false;
+      }
+      this.viewNode.show = false;
     },
     selectedAddThere(id) {
       const pickerItem = this.availableTypes.find((e) => e.id === id);
@@ -415,7 +435,7 @@ export default {
         }
         const updated = treeUtils.removeNode(this.scene, id);
         this.updateScene(updated);
-        this.selectedNode = null;
+        this.viewNode.show = false;
       } catch (e) {
         console.error(e);
         this.reject('trash');
@@ -423,8 +443,19 @@ export default {
         return;
       }
     },
-    selectNode(id) {
-      this.selectedNode = this.scene[id];
+    initializeViewNode(id) {
+      if (id) {
+        this.viewNode.node = this.scene[id];
+        this.addThere.show = false;
+        if (this.viewNode.show) {
+          this.viewNode.show = false;
+          setTimeout(() => (this.viewNode.show = true), 400);
+        } else {
+          this.viewNode.show = true;
+        }
+      } else {
+        this.viewNode.show = false;
+      }
     },
     reject(id) {
       this.rejected[id] = true;

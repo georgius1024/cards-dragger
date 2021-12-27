@@ -7,6 +7,7 @@
     @dragenter.prevent="dragenter"
     @dragleave.prevent="dragleave"
     @drop.stop="drop"
+    @click="$emit('click')"
   >
     <svg style="width: 96px; height: 96px" viewBox="0 0 24 24">
       <path
