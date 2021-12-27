@@ -332,7 +332,7 @@ export default {
       }
     },
     initializeAddThere(id, left) {
-      if (id) {
+      if (id && (id !== this.addThere.node.id || left !== this.addThere.left)) {
         this.addThere.node = this.scene[id];
         this.addThere.left = left;
         this.viewNode.show = true;
@@ -343,6 +343,7 @@ export default {
           this.addThere.show = true;
         }
       } else {
+        this.addThere.node = {};
         this.addThere.show = false;
       }
       this.viewNode.show = false;
@@ -444,7 +445,7 @@ export default {
       }
     },
     initializeViewNode(id) {
-      if (id) {
+      if (id && id !== this.viewNode.node?.id) {
         this.viewNode.node = this.scene[id];
         this.addThere.show = false;
         if (this.viewNode.show) {
@@ -454,6 +455,7 @@ export default {
           this.viewNode.show = true;
         }
       } else {
+        this.viewNode.node = {};
         this.viewNode.show = false;
       }
     },
