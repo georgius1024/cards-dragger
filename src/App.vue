@@ -45,6 +45,7 @@
       @zoomOut="zoomOut"
       @select="initializeViewNode"
       @addThere="initializeAddThere"
+      @delete="deleteNode"
     />
   </Layout>
 </template>

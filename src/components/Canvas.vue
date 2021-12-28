@@ -36,6 +36,7 @@
         :rightConnection="connectionPoint(item.right)"
         @dropOn="$emit('dropOn', $event)"
         @click="nodeClick(item.id)"
+        @delete="$emit('delete', item.id)"
         @addThere="addThere"
       />
     </div>

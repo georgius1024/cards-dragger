@@ -89,19 +89,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.background {
-  // top: 0;
-  // left: 0;
-  // width: 100vw;
-  // height: 100vh;
-  // position: fixed;
-  // opacity: 0;
-  // transform: translateY(-100%);
-  &.show {
-    // transform: translateY(0);
-    // opacity: 1;
-  }
-}
 .panel {
   position: fixed;
   top: 0;

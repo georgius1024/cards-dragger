@@ -82,6 +82,16 @@ $primary-color: #0093ff;
   & * {
     pointer-events: none;
   }
+  .node-delete-control {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin: 8px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 15;
+  }
   .icon {
     margin: 4px;
   }

@@ -7,6 +7,6 @@ export default function defaultTypeText(type) {
     case 'fork':
       return 'Fork condition';
     case 'flash':
-      return 'Workflow desciption';
+      return 'Workflow description';
   }
 }
