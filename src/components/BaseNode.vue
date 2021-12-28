@@ -11,7 +11,6 @@
     @dragleave.prevent="dragleave"
     @drop.stop="dropOn"
     @click.stop="click"
-    @mousedown.stop
   >
     <div class="icon">
       <img :src="icons[type]" />
@@ -26,7 +25,7 @@
       v-if="absolute"
       class="node-delete-control"
       viewBox="0 0 24 24"
-      @click.stop="$emit('delete', node.id)"
+      ref="delete"
     >
       <path
         fill="#DE3618"
@@ -208,8 +207,12 @@ export default {
       const to = this.id;
       this.$emit('dropOn', { from, to });
     },
-    click() {
-      this.$emit('click', this.id);
+    click(event) {
+      if (event.target === this.$refs.delete) {
+        this.$emit('delete', this.id);
+      } else {
+        this.$emit('click', this.id);
+      }
     },
     addThere() {
       this.$emit('addThere', this.id);

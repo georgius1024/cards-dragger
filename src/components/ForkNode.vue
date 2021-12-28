@@ -25,8 +25,8 @@
     <svg
       v-if="absolute"
       class="node-delete-control"
+      ref="delete"
       viewBox="0 0 24 24"
-      @click.stop="$emit('delete', node.id)"
     >
       <path
         fill="#DE3618"
