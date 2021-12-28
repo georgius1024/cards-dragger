@@ -19,6 +19,10 @@
         @update="updateNode"
         @delete="deleteNode"
       />
+      <DeleteTreeMethodPicker
+        :node="selectDeleteMethod.node"
+        v-model="selectDeleteMethod.show"
+      />
     </template>
     <template v-slot:header>
       <Header
@@ -70,6 +74,7 @@ import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
 import AddThereModal from './components/AddThereModal.vue';
 import ViewNodeModal from './components/ViewNodeModal.vue';
+import DeleteTreeMethodPicker from './components/DeleteTreeMethodPicker.vue';
 export default {
   components: {
     Layout,
@@ -77,7 +82,8 @@ export default {
     Header,
     Canvas,
     AddThereModal,
-    ViewNodeModal
+    ViewNodeModal,
+    DeleteTreeMethodPicker
   },
   data() {
     return {
@@ -92,6 +98,10 @@ export default {
         left: null
       },
       viewNode: {
+        show: false,
+        node: {}
+      },
+      selectDeleteMethod: {
         show: false,
         node: {}
       }
@@ -332,6 +342,25 @@ export default {
         this.selectedNode = null;
       }
     },
+    initializeViewNode(id) {
+      if (id && id !== this.viewNode.node?.id) {
+        this.viewNode.node = this.scene[id];
+        this.addThere.show = false;
+        if (this.viewNode.show) {
+          this.viewNode.show = false;
+          setTimeout(() => (this.viewNode.show = true), 400);
+        } else {
+          this.viewNode.show = true;
+        }
+      } else {
+        this.viewNode.node = {};
+        this.viewNode.show = false;
+      }
+    },
+    initializeDeleteTree(id) {
+      this.selectDeleteMethod.node = this.scene[id];
+      this.selectDeleteMethod.show = true;
+    },
     initializeAddThere(id, left) {
       if (id && (id !== this.addThere.node.id || left !== this.addThere.left)) {
         this.addThere.node = this.scene[id];
@@ -433,7 +462,8 @@ export default {
           throw new Error('Not scene item');
         }
         if (node.fork && (node.left || node.right)) {
-          throw new Error("Can't remove fork node with children");
+          return this.initializeDeleteTree(id);
+          //throw new Error("Can't remove fork node with children");
         }
         const updated = treeUtils.removeNode(this.scene, id);
         this.updateScene(updated);
@@ -443,21 +473,6 @@ export default {
         this.reject('trash');
         this.reject(id);
         return;
-      }
-    },
-    initializeViewNode(id) {
-      if (id && id !== this.viewNode.node?.id) {
-        this.viewNode.node = this.scene[id];
-        this.addThere.show = false;
-        if (this.viewNode.show) {
-          this.viewNode.show = false;
-          setTimeout(() => (this.viewNode.show = true), 400);
-        } else {
-          this.viewNode.show = true;
-        }
-      } else {
-        this.viewNode.node = {};
-        this.viewNode.show = false;
       }
     },
     reject(id) {

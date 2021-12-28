@@ -3,7 +3,6 @@
     class="panel"
     ref="panel"
     :style="panelStyle"
-    @transitionend="afterTransition"
     v-click-outside="handleClickOutside"
   >
     <button v-if="closeClick" class="close-control" @click="handleClose">
@@ -63,14 +62,7 @@ export default {
     hide() {
       this.$refs.panel.classList.remove('show');
     },
-    afterTransition() {
-      if (!this.modelValue) {
-        // document.body.style.overflowY = 'auto';
-      }
-    },
     show() {
-      // document.body.style.overflowY = 'hidden';
-      // this.$refs.background.classList.add('show');
       this.$refs.panel.classList.add('show');
     },
     handleClickOutside() {
