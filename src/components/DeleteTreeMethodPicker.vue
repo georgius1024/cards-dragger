@@ -1,6 +1,6 @@
 <template>
   <Modal :modelValue="modelValue" @close="$emit('update:modelValue', false)">
-    <label>How to delete selected node</label>
+    <label>Selected node</label>
     <BaseNode
       v-if="node.id"
       :id="node.id"
@@ -8,9 +8,16 @@
       :type="node.type"
       :text="node.text"
     />
-    <button @click="select('left')">Left</button>
-    <button @click="select('right')">Right</button>
-    <button @click="select('both')">Both</button>
+    <label>Choose delete action</label>
+    <button class="primary-border" @click="select('left')">
+      Delete left branch
+    </button>
+    <button class="primary-border" @click="select('right')">
+      Delete right branch
+    </button>
+    <button class="primary-border" @click="select('both')">
+      Delete both branches
+    </button>
   </Modal>
 </template>
 <script>
@@ -34,7 +41,7 @@ export default {
   },
   methods: {
     select(what) {
-      this.$emit('select', what);
+      this.$emit('selected', what);
       this.$emit('update:modelValue', false);
       this.$emit('close');
     }
@@ -42,7 +49,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.container {
+button {
   margin-top: 6px;
+  padding: 16px;
+  background-color: #fff;
+  display: block;
+  width: 100%;
 }
 </style>

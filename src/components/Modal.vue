@@ -94,7 +94,6 @@ export default {
   position: fixed;
   z-index: 10;
   opacity: 0;
-  transition: opacity 200ms ease;
   transform: translateY(-100%);
   display: flex;
   align-items: center;
@@ -112,8 +111,8 @@ export default {
     display: block;
     text-align: left;
     box-shadow: 4px 6px 2px rgba(0, 0, 0, 0.32);
-    transition: transform 200ms ease;
-    transform: translateY(calc(-100% - 5px));
+    transition: transform 500ms ease;
+    transform: translateY(calc(-50vh - 50% - 10px));
     background-color: #fff;
     padding: 48px 16px 16px;
     &.show {

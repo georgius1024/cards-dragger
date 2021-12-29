@@ -21,6 +21,7 @@
       />
       <DeleteTreeMethodPicker
         :node="selectDeleteMethod.node"
+        @selected="selectedDeleteMethod"
         v-model="selectDeleteMethod.show"
       />
     </template>
@@ -360,6 +361,10 @@ export default {
     initializeDeleteTree(id) {
       this.selectDeleteMethod.node = this.scene[id];
       this.selectDeleteMethod.show = true;
+      this.addThere.show = false;
+      this.addThere.node = {};
+      this.viewNode.show = false;
+      this.viewNode.node = {};
     },
     initializeAddThere(id, left) {
       if (id && (id !== this.addThere.node.id || left !== this.addThere.left)) {
@@ -468,6 +473,24 @@ export default {
         const updated = treeUtils.removeNode(this.scene, id);
         this.updateScene(updated);
         this.viewNode.show = false;
+      } catch (e) {
+        console.error(e);
+        this.reject('trash');
+        this.reject(id);
+        return;
+      }
+    },
+    selectedDeleteMethod(method) {
+      const { id } = this.selectDeleteMethod.node;
+      try {
+        if (DeleteTreeMethodPicker === 'both') {
+          const updated = treeUtils.removeNode(this.scene, id);
+          this.updateScene(updated);
+        } else {
+          const keepLeft = method === 'right';
+          const updated = treeUtils.removeNode(this.scene, id, keepLeft);
+          this.updateScene(updated);
+        }
       } catch (e) {
         console.error(e);
         this.reject('trash');
