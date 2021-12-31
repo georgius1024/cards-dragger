@@ -15,7 +15,7 @@
     <label v-if="isBelowConnection">Add after selected</label>
     <label v-if="isLeftConnection">Add to the left side of selected</label>
     <label v-if="isRightConnection">Add to the right side of selected</label>
-    <div v-for="node in validChilds" class="container" :key="node.type">
+    <div v-for="node in nodes" class="container" :key="node.type">
       <BaseNode
         :id="node.id"
         :type="node.type"
@@ -58,12 +58,6 @@ export default {
         return !this.node?.left;
       }
       return !this.node?.right;
-    },
-    validChilds() {
-      if (this.isFreeConnection) {
-        return this.nodes;
-      }
-      return this.nodes.filter((e) => e.type !== 'fork');
     },
     isBelowConnection() {
       return !this.node?.fork;

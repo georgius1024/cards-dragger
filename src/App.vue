@@ -38,7 +38,7 @@
       />
     </template>
     <Canvas
-      :scene="widerScene"
+      :scene="scene"
       :rejected="rejected"
       :zoom="zoom"
       :zoomableIn="zoomableIn"
@@ -71,6 +71,7 @@ import {
   redo
 } from './utils/history';
 import treeUtils from './utils/tree';
+import withExitNodes from './utils/WithExitNodes';
 import defaultTypeText from './utils/DefaultTypeText';
 import samples from './samples';
 import AddThereModal from './components/AddThereModal.vue';
@@ -111,32 +112,6 @@ export default {
   computed: {
     scene() {
       return this.history ? getCurrent(this.history) : [];
-    },
-    widerScene() {
-      const scene = treeUtils.clone(this.scene);
-      return Object.keys(scene).reduce((map, key) => {
-        const node = scene[key];
-        map[key] = node;
-        if (!node.left) {
-          const terminator = {
-            id: nanoid(),
-            parent: node.id,
-            type: 'stop-left'
-          };
-          node.left = terminator.id;
-          map[terminator.id] = terminator;
-        }
-        if (node.type === 'fork' && !node.right) {
-          const terminator = {
-            id: nanoid(),
-            parent: node.id,
-            type: 'stop-right'
-          };
-          node.right = terminator.id;
-          map[terminator.id] = terminator;
-        }
-        return map;
-      }, {});
     },
     undoable() {
       return Boolean(this.history && undoable(this.history));
@@ -216,8 +191,10 @@ export default {
       }
     ];
     this.history = initialize(
-      treeUtils.load(
-        initial.map((e) => ({ ...e, text: defaultTypeText(e.type) }))
+      withExitNodes(
+        treeUtils.load(
+          initial.map((e) => ({ ...e, text: defaultTypeText(e.type) }))
+        )
       )
     );
     this.backgroundSaver = debounce(() => this.save(), 1000);
@@ -260,7 +237,7 @@ export default {
       try {
         const savedScene = JSON.parse(localStorage['savedScene'] || '0');
         if (Array.isArray(savedScene)) {
-          this.history = initialize(treeUtils.load(savedScene));
+          this.history = initialize(withExitNodes(treeUtils.load(savedScene)));
         }
       } catch (e) {
         console.error(e);
@@ -270,7 +247,7 @@ export default {
     loadSample(id) {
       try {
         const sample = samples.find((e) => e.id === id);
-        const newScene = treeUtils.load(sample.data);
+        const newScene = withExitNodes(treeUtils.load(sample.data));
         this.history = initialize(newScene);
       } catch (e) {
         console.error(e);
@@ -404,23 +381,6 @@ export default {
         id: nanoid()
       };
       try {
-        if (nodeToInsert.fork) {
-          // only attach to open connections
-          if (targetNode.fork) {
-            // check both connectons
-            if (left && targetNode.left) {
-              throw new Error('Can attach new fork only to leaf node');
-            }
-            if (!left && targetNode.right) {
-              throw new Error('Can attach new fork only to leaf node');
-            }
-          } else {
-            // check left connection
-            if (targetNode.left) {
-              throw new Error('Can attach new fork only to leaf node');
-            }
-          }
-        }
         const updated = treeUtils.insert(
           this.scene,
           targetNode.id,
@@ -428,7 +388,7 @@ export default {
           left,
           treeUtils.payload(nodeToInsert)
         );
-        this.updateScene(updated);
+        this.updateScene(withExitNodes(updated));
       } catch (e) {
         console.error(e);
         this.reject(picked.id);
