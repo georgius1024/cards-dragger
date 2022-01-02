@@ -65,6 +65,7 @@ import {
   initialize,
   addState,
   getCurrent,
+  replaceState,
   undoable,
   redoable,
   undo,
@@ -229,9 +230,20 @@ export default {
   },
   methods: {
     save() {
-      const savedScene = treeUtils.pack(this.scene);
-      localStorage['savedScene'] = JSON.stringify(savedScene);
-      this.savingStatus = 'autosaved';
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const savedScene = treeUtils.pack(this.scene);
+          localStorage['savedScene'] = JSON.stringify(savedScene);
+          this.savingStatus = 'autosaved';
+          let counter = 1000;
+          const translations = Object.keys(this.scene).reduce((map, item) => {
+            return { ...map, [item]: counter++ };
+          }, {});
+          const updated = treeUtils.translateKeys(this.scene, translations);
+          this.history = replaceState(this.history, updated);
+          resolve();
+        }, 10);
+      });
     },
     load() {
       try {

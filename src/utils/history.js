@@ -15,18 +15,17 @@ export function addState(history, snapshot) {
   };
 }
 
-export function replaceState(history, snapshot, position) {
+export function replaceState({ states, position }, replaceWith) {
 
-  const states = history.states.map((state, index) => {
+  const replacedStates = states.map((state, index) => {
     if (index === position - 1) {
-      return snapshot
+      return replaceWith
     }
     return state
   })
   return {
-    ...history,
-    states,
-    position: position + 1
+    states: replacedStates,
+    position
   };
 }
 
