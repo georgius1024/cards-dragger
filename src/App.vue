@@ -295,7 +295,9 @@ export default {
       this.backgroundSaver();
     },
     erase() {
-      this.history = initialize(treeUtils.load(this.initialScene));
+      this.history = initialize(
+        withExitNodes(treeUtils.load(this.initialScene))
+      );
     },
     zoomIn() {
       this.zoom = Math.min(this.zoom + 0.1, 1);
